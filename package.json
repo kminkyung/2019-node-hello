@@ -1,0 +1,26 @@
+{
+  "name": "17.node-hello",
+  "version": "1.0.0",
+  "description": "1. 작업할 폴더를 만들고 `vscode` 에서 생성한 폴더를 선택하고 `npm 프로젝트`를 시작한다.\r ```\r npm init -y\r ```\r 2. npm 프로젝트 시작 후 express.js를 설치한다.\r ```\r npm i -S express\r ```\r 3. git 에 push 하기 전에 .gitignore 파일을 생성하고 `node_modules`, `package-lock.json` 을 추가한다.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kminkyung/2019-node-hello.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kminkyung/2019-node-hello/issues"
+  },
+  "homepage": "https://github.com/kminkyung/2019-node-hello#readme"
+}
