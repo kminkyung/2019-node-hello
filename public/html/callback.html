@@ -1,0 +1,44 @@
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+console.log("Hell");
+setTimeout(function(){
+	console.log("World");
+}, 0);
+console.log("See You~")
+
+console.clear();
+
+
+function getUser(cb) {
+  $.ajax({
+    url: "../json/sample.json",
+    success: cb
+  });
+}
+ 
+function userCb(data){
+  console.log(data);
+}
+getUser(userCb);
+
+
+
+function aaa(str, cb) {
+	str = str + " Hello"; //AB
+	cb(str);
+}
+
+function bbb(str, cb) {
+	str = str + " World" //ABC
+	cb(str);
+}
+
+function getTest(name) {
+	aaa(name, function(data){
+		bbb(data, function(data2){
+			console.log(data2);
+		})
+	})
+}
+getTest("Minkyung");
+</script>
