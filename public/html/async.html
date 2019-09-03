@@ -21,4 +21,25 @@ function getUser(data) {
 function getScore(data) {
 	console.log(data);
 }
+
+// async 예제 2
+async function add10(n) {
+	var n2 = await function(n){
+		return n + 10;
+	};
+}
+add10(10).then(function(data){
+	console.log(data);
+});
+
+function add20(n) {
+	return n + 20;
+}
+function sum(n) {
+	var n2 = add10(n);
+	var n3 = add20(n2);
+	return n3;
+}
+console.log(sum(10));
+
 </script>
