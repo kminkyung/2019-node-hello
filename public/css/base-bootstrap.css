@@ -23,8 +23,8 @@ th, td {vertical-align: middle !important;}
 .f-25 {font-size: 2.5rem;}			/* 40px */
 .f-3 {font-size: 3rem;}					/* 48px */
 
-header a {color: white;}
-header a:link {color: white;}
-header a:visited {color: white;}
-header a:hover {color: beige; text-decoration: none;}
-header a:active {color: white;}
+.navi a {color: white;}
+.navi a:link {color: white;}
+.navi a:visited {color: white;}
+.navi a:hover {color: beige; text-decoration: none;}
+.navi a:active {color: white;}

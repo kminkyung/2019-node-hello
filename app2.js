@@ -39,5 +39,40 @@ app.get(["/page", "/page/:page"], (req, res) => {
 	res.render("page", vals);
 });
 
+app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbook/:type으로 들어옴
+	var type = req.params.type;
+	var vals = {
+		css: "gbook",
+		js: "gbook"
+	}
+	var pug;
+	switch(type) {
+		case "in":
+			vals.title = "방명록 작성";
+			pug = "gbook_in";
+			res.render(pug, vals);
+			break;
+		default:
+			var sql = "SELECT * FROM gbook ORDER BY id DESC"
+			sqlExec(sql).then((data) => {
+				vals.datas = data[0];
+				vals.title = "방명록";
+				pug = "gbook";
+				for(let item of data[0]) {
+					item.wtime = util.dspDate(new Date(item.wtime));
+				}
+				res.render(pug, vals);
+			}).catch(sqlErr);
+			break;
+		}
+});
 
 // Router 영역 - POST
+app.post("/gbook_save", (req, res) => {
+	var comment = req.body.comment;
+	var sql = "INSERT INTO gbook SET comment=?, wtime=?";
+	var vals = [comment, util.dspDate(new Date())];
+	sqlExec(sql, vals).then((data) => {
+		res.redirect("/gbook");
+	}).catch(sqlErr);
+});

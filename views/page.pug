@@ -1,13 +1,15 @@
 doctype html
 html(lang="ko")
 	head
-		include ./inc/hedaer.pug
+		include ./inc/header.pug
 	body
 		include ./inc/navi.pug
-		.container
+		.container.my-3
 			.jumbotron= `${page} 페이지 입니다.`
 			.my-3.p-3.text-center.f-2 PUG로 작성된 페이지 입니다.
+		include ./inc/footer.pug
 		include ./inc/script.pug
+
 
 //- 속성은 괄호()를 열고 들어간다. 
 //- 어떻게 태그가 닫히는 걸 아는가? 계층구조를 지키면 됨 
