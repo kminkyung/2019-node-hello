@@ -1,0 +1,16 @@
+doctype html
+html(lang="ko")
+	head
+		include ./inc/hedaer.pug
+	body
+		include ./inc/navi.pug
+		.container
+			.jumbotron= `${page} 페이지 입니다.`
+			.my-3.p-3.text-center.f-2 PUG로 작성된 페이지 입니다.
+		include ./inc/script.pug
+
+//- 속성은 괄호()를 열고 들어간다. 
+//- 어떻게 태그가 닫히는 걸 아는가? 계층구조를 지키면 됨 
+//- =을 쓰면 변수가 들어감. 그냥 쓰면 text 
+//- 문자열 안에서는 template string 으로 변수를 쓴다.
+//- 먼가.... 자바와 HTML 의 혼종...???

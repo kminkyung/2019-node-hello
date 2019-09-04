@@ -18,6 +18,8 @@ app.listen(8000, () => {
 // Router (길잡이)
 app.use(bodyParser.urlencoded({extended: false}));
 app.use("/", express.static("./public"));
+app.set("view engine", "pug") //view를 랜더링해주는 엔진은 pug를 쓸 것, "view engine"은 app이 가지는 속성값
+app.set("views", "./view") //view들이 담기는 곳은 ./views 라는 폴더라는 뜻
 
 app.get("/hello", (req, res) => {
 	var id = req.query.userid; //http://127.0.0.1:3000/hello?userid=minkyung
