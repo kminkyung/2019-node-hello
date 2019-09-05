@@ -26,9 +26,12 @@ app.set("view engine", "pug");//view를 랜더링해주는 엔진은 pug를 쓸 
 app.set("views", "./views"); //view들이 담기는 공간은, ./views 
 app.locals.pretty = true; //locals(property).pretty(property) ???이게 뭘까??
 
+
 // Router 영역 - GET
 //http://127.0.0.1:3000/page
 //http://127.0.0.1:3000/page/1
+
+// 방명록을 node.js 개발자가 전부 만드는 방식
 app.get(["/page", "/page/:page"], (req, res) => {
 	var page = req.params.page;
 	if(!page) page = "없는" //req.params.page 가 없을때 처리
@@ -67,11 +70,23 @@ app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbo
 		}
 });
 
+// 방명록을 Ajax 통신으로 데이터만 보내주는 방식
+app.get("/gbook_ajax", (req, res) => {
+	var title = "방명록 - Ajax";
+	var css = "gbook_ajax";
+	var js = "gbook_ajax";
+	var vals = {title, css, js};
+	res.render("gbook_ajax", vals);
+});
+
+
 // Router 영역 - POST
 app.post("/gbook_save", (req, res) => {
+	var writer = req.body.writer;
+	var pw = req.body.pw;
 	var comment = req.body.comment;
-	var sql = "INSERT INTO gbook SET comment=?, wtime=?";
-	var vals = [comment, util.dspDate(new Date())];
+	var sql = "INSERT INTO gbook SET comment=?, wtime=?, writer=?, pw=?";
+	var vals = [comment, util.dspDate(new Date()), writer, pw];
 	sqlExec(sql, vals).then((data) => {
 		res.redirect("/gbook");
 	}).catch(sqlErr);
