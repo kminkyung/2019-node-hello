@@ -37,6 +37,9 @@ SELECT * FROM gbook WHERE comment LIKE '%하이%' -- '하이'가 포함된 문�
 SELECT * FROM gbook WHERE comment LIKE '%?%' ORDER BY id DESC LIMIT 0, 5
 SELECT * FROM gbook WHERE comment LIKE '%?%' ORDER BY id DESC LIMIT 10, 5
 
+
+-- 레코드의 갯수를 가져오기
+SELECT count(id) FROM gbook
 ```
 
 

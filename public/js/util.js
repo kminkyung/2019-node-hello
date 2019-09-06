@@ -73,3 +73,24 @@ function includeHTML() {
 }
 
 includeHTML();
+
+
+
+
+//function ajax() 로 들어오는 url에 따라서 query든지 params든지 전부 처리할 수 있게함. => 모듈
+//사용자 정의 ajax 함수
+function ajax(url, type, vals, cb) {
+/* 	if(typeof vals == Object) data = vals; // req.query
+	else url = url+"/"+vals; // req.params */
+	//여기서 vals 는 query
+	$.ajax({
+		type: type,
+		url: url,
+		data: vals,
+		dataType: "json",
+		error: function(xhr, status, error) {
+			console.log(xhr, status, error);
+		},
+		success: cb
+	});
+}

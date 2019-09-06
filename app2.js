@@ -71,12 +71,35 @@ app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbo
 });
 
 // 방명록을 Ajax 통신으로 데이터만 보내주는 방식
+
+// 페이지 디자인만 보여줌
 app.get("/gbook_ajax", (req, res) => {
 	var title = "방명록 - Ajax";
 	var css = "gbook_ajax";
 	var js = "gbook_ajax";
 	var vals = {title, css, js};
 	res.render("gbook_ajax", vals);
+});
+
+//http://127.0.0.1:3000/gbook_ajax/1?grpCnt=10
+// 실제 ajax 통신을 하는 부분
+app.get("/gbook_ajax/:page", (req, res) => { 
+	var page = Number(req.params.page);
+	var grpCnt = Number(req.query.grpCnt); // 한페이지에 보여질 목록 갯수
+	var stRec = (page - 1) * grpCnt; // 목록을 가져오기 위해 목록의 시작 INDEX
+	var vals = []; // query에 보내질 ? 값
+	var reData = []; // res.json() 보낼 데이터 값
+	// 총 페이지수 가져오기
+	var sql = "SELECT count(id) FROM gbook";
+	sqlExec(sql).then((data) => {
+		reData.push({totCnt: data[0][0]["count(id)"]}); 
+		sql = "SELECT * FROM gbook ORDER BY id DESC LIMIT ?, ?";
+		vals = [stRec, grpCnt];
+		sqlExec(sql, vals).then((data) => {
+			reData.push(data[0]);
+			res.json(reData);
+		}).catch(sqlErr);
+	}).catch(sqlErr);
 });
 
 
