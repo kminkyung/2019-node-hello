@@ -42,8 +42,19 @@ app.get(["/page", "/page/:page"], (req, res) => {
 	res.render("page", vals);
 });
 
-app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbook/:type으로 들어옴
+// 방명록을 node.js 개발자가 전부 만드는 방식
+/* 
+type: in - 작성
+type: li/1(id - page) - 목록
+type: up/1(id) - 수정
+type: rm/1(id) - 삭제
+*/
+app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/in, list 해도 /gbook/:type으로 들어옴
 	var type = req.params.type;
+	var id = req.params.id;
+	if(type == undefined) type = "li";
+	if(type == "li" && id == undefined) id = "1";
+	if(id == undefined && type !== "in") res.redirect("/404.html");
 	var vals = {
 		css: "gbook",
 		js: "gbook"
@@ -55,7 +66,7 @@ app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbo
 			pug = "gbook_in";
 			res.render(pug, vals);
 			break;
-		default:
+		case "li":
 			var sql = "SELECT * FROM gbook ORDER BY id DESC"
 			sqlExec(sql).then((data) => {
 				vals.datas = data[0];
@@ -66,6 +77,9 @@ app.get(["/gbook", "/gbook/:type"], (req, res) => { //gbook/in, list 해도 /gbo
 				}
 				res.render(pug, vals);
 			}).catch(sqlErr);
+			break;
+		default:
+			res.redirect("/404.html")
 			break;
 		}
 });
@@ -88,18 +102,22 @@ app.get("/gbook_ajax/:page", (req, res) => {
 	var grpCnt = Number(req.query.grpCnt); // 한페이지에 보여질 목록 갯수
 	var stRec = (page - 1) * grpCnt; // 목록을 가져오기 위해 목록의 시작 INDEX
 	var vals = []; // query에 보내질 ? 값
-	var reData = []; // res.json() 보낼 데이터 값
-	// 총 페이지수 가져오기
-	var sql = "SELECT count(id) FROM gbook";
-	sqlExec(sql).then((data) => {
-		reData.push({totCnt: data[0][0]["count(id)"]}); 
+	var reData = {}; // res.json() 보낼 데이터 값
+	var sql;
+	var result;
+	(async () => {
+		// 총 페이지 수 갖오기
+		sql = "SELECT count(id) FROM gbook";
+		result = await sqlExec(sql);
+		reData.totCnt = result[0][0]["count(id)"]; 
+		// 레코드 가져오기
 		sql = "SELECT * FROM gbook ORDER BY id DESC LIMIT ?, ?";
 		vals = [stRec, grpCnt];
-		sqlExec(sql, vals).then((data) => {
-			reData.push(data[0]);
-			res.json(reData);
-		}).catch(sqlErr);
-	}).catch(sqlErr);
+		result = await sqlExec(sql, vals);
+		reData.rs = result[0];
+		res.json(reData);
+		console.log(reData);
+	})()
 });
 
 
