@@ -12,6 +12,8 @@ const bodyParser = require("body-parser"); //node_modules 의 body-parser import
 // modules 참조 (내가 만든 것들)
 const util = require("./modules/util")
 const db = require("./modules/mysql_conn")
+const pager = require("./modules/pager")
+// import {val1, val2} from "./modules/pager";
 
 // 전역변수 선언
 const sqlPool = db.sqlPool; //mysql_conn 에서 export 한 변수
@@ -60,6 +62,9 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 		js: "gbook"
 	}
 	var pug;
+	var sql;
+	var sqlVal;
+	var result;
 	switch(type) {
 		case "in":
 			vals.title = "방명록 작성";
@@ -67,7 +72,29 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 			res.render(pug, vals);
 			break;
 		case "li":
-			var sql = "SELECT * FROM gbook ORDER BY id DESC"
+			(async () => {
+				var totCnt = 0;
+				var page = id;
+				var divCnt = 3;
+				var grpCnt = req.query.grpCnt; //?grpCnt=number. client 에서 정할 수 있도록 함.
+				if(grpCnt == undefined || typeof grpCnt !== "number" ) grpCnt = 5; //값을 안주었을 경우 default 값을 줌
+				sql = "SELECT count(id) FROM gbook"; //sql 요청(total count) 을 변수 sql에 넣기
+				result = await sqlExec(sql); // sql에서 데이터가져올때까지 기다려서 결과를 result에 넣기
+				totCnt = result[0][0]["count(id)"]; //변수 totCnt 에 sql로 가져온 데이터 중 total count 를 찾아 넣기
+				const pagerVal = pager.pagerMaker({totCnt, grpCnt, page});
+				sql = "SELECT * FROM gbook ORDER BY id DESC limit ?, ?"
+				sqlVal = [pagerVal.stRec, pagerVal.grpCnt];
+				result = await sqlExec(sql, sqlVal);
+				vals.datas = result[0];
+				vals.title = "방명록";
+				vals.pager = pagerVal;
+				pug = "gbook";
+				for(let item of vals.datas) {
+					item.wtime = util.dspDate(new Date(item.wtime));
+				}
+				res.render(pug, vals);
+			})();
+/* 			var sql = 
 			sqlExec(sql).then((data) => {
 				vals.datas = data[0];
 				vals.title = "방명록";
@@ -76,7 +103,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 					item.wtime = util.dspDate(new Date(item.wtime));
 				}
 				res.render(pug, vals);
-			}).catch(sqlErr);
+			}).catch(sqlErr); */
 			break;
 		default:
 			res.redirect("/404.html")
@@ -84,8 +111,9 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 		}
 });
 
-// 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 
+
+// 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 // 페이지 디자인만 보여줌
 app.get("/gbook_ajax", (req, res) => {
 	var title = "방명록 - Ajax";
