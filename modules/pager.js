@@ -2,7 +2,7 @@
 const pagerMaker = (obj) => {
 	if(obj.grpCnt == undefined) obj.grpCnt = 5;
 	if(obj.divCnt == undefined) obj.divCnt = 3;
-	if(obj.totCnt == undefined) return false;
+	if(obj.totCnt == undefined) return false; //필수 value가 없으면 pagerMaker실행이 안되게
 	if(obj.page == undefined) return false;
 	obj.cnt = Math.ceil(obj.totCnt / obj.grpCnt); //전체 페이지 개수
 	obj.stn = 0; //세트 중 시작 페이지
