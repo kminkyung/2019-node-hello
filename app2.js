@@ -76,23 +76,28 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				var totCnt = 0;
 				var page = id;
 				var divCnt = 3;
-				var grpCnt = req.query.grpCnt; //?grpCnt=number. client 에서 정할 수 있도록 함.
-				if(grpCnt == undefined || typeof grpCnt !== "number" ) grpCnt = 5; //값을 안주었을 경우 default 값을 줌
-				sql = "SELECT count(id) FROM gbook"; //sql 요청(total count) 을 변수 sql에 넣기
-				result = await sqlExec(sql); // sql에서 데이터가져올때까지 기다려서 결과를 result에 넣기
-				totCnt = result[0][0]["count(id)"]; //변수 totCnt 에 sql로 가져온 데이터 중 total count 를 찾아 넣기
+				var grpCnt = req.query.grpCnt;
+				if(grpCnt == undefined || typeof grpCnt !== "number" ) grpCnt = 5; 
+
+				// sql total count
+				sql = "SELECT count(id) FROM gbook"; 
+				result = await sqlExec(sql);
+				totCnt = result[0][0]["count(id)"]; 
+
+				// sql startRecord grpCnt
 				const pagerVal = pager.pagerMaker({totCnt, grpCnt, page});
 				sql = "SELECT * FROM gbook ORDER BY id DESC limit ?, ?"
 				sqlVal = [pagerVal.stRec, pagerVal.grpCnt];
 				result = await sqlExec(sql, sqlVal);
 				vals.datas = result[0];
+
 				vals.title = "방명록";
 				vals.pager = pagerVal;
 				pug = "gbook";
 				for(let item of vals.datas) {
 					item.wtime = util.dspDate(new Date(item.wtime));
 				}
-				res.render(pug, vals);
+				res.render(pug, vals); //vals에 title, pager{totCnt, grpCnt, page} 를 넣음
 			})();
 /* 			var sql = 
 			sqlExec(sql).then((data) => {
