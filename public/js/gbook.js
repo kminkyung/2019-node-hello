@@ -26,7 +26,7 @@ $(".page-item").click(function(){
 });
 
 
-
+// 상세내용보기 - modal POPUP
 $("#gbook-tb td").not(":last-child").click(function(){
 	var id = $(this).parent().children("td").eq(0).text(); //this는 클릭당한 td, td의 부모는 tr, 그 자식 중 0번째 td, 의 text를 id에 넣음.
 	$.ajax({
@@ -38,9 +38,20 @@ $("#gbook-tb td").not(":last-child").click(function(){
 			$("#gbook-modal tr").eq(0).children("td").eq(1).html(res.writer);
 			$("#gbook-modal tr").eq(1).children("td").eq(1).html(dspDate(new Date(res.wtime)));
 			$("#gbook-modal tr").eq(2).children("td").find("div").html(res.comment);
-			$("#gbook-modal").modal('show');
+			$("#gbook-modal").modal("show");
 		}
 	});
+});
+
+
+// 삭제
+$(".btRev").click(function(){
+	var id = $(this).parent().parent().children("td").eq(0).text();
+	// $("form[name='removeForm']").find("input[name='id']")
+	$("#remove-modal").find("input[name='id']").val(id);
+	$("#remove-modal").find("input[name='pw']").val('');
+	$("#remove-modal").find("input[name='pw']").focus();
+	$("#remove-modal").modal("show");
 });
 
 // $("#bt-close").click(function(){

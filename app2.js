@@ -135,7 +135,7 @@ app.get("/api/:type", (req, res) => {
 				})();
 			} 
 			break;
-		case "delete":
+		case "remove":
 			if(id === undefined || pw === undefined) req.redirect("/500.html");
 			else {
 				sql = "DELETE FROM gbook WHERE id=? AND pw=?";
