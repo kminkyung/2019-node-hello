@@ -116,7 +116,42 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 		}
 });
 
-
+app.get("/api/:type", (req, res) => {
+	var type = req.params.type;
+	var id = req.query.id;
+	var pw = req.query.pw;
+	var sql;
+	var vals = [];
+	var result;
+	switch(type) {
+		case "modalData":
+			if(id === undefined) req.redirect("/500.html");
+			else {
+				sql = "SELECT * FROM gbook WHERE id=?";
+				vals.push(id); //배열 vals의 0번째에 id를 넣음
+				(async () => {
+					result = await sqlExec(sql, vals);
+					res.json(result[0][0]);
+				})();
+			} 
+			break;
+		case "delete":
+			if(id === undefined || pw === undefined) req.redirect("/500.html");
+			else {
+				sql = "DELETE FROM gbook WHERE id=? AND pw=?";
+				vals.push(id);
+				vals.push(pw);
+				(async () => {
+					result = await sqlExec(sql, vals);
+					res.json(result);
+				})();
+			}
+			break;
+		default:
+			res.redirect("/404.html");
+			break;
+	}
+});
 
 // 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 // 페이지 디자인만 보여줌
