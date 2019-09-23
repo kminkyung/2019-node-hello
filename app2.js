@@ -116,6 +116,9 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 		}
 });
 
+//http://127.0.0.1/api/modaldata?id=2
+//http://127.0.0.1/api/remove?id=2$pw=11111111
+//http://127.0.0.1/api/update
 app.get("/api/:type", (req, res) => {
 	var type = req.params.type;
 	var id = req.query.id;
@@ -135,15 +138,42 @@ app.get("/api/:type", (req, res) => {
 				})();
 			} 
 			break;
+		default:
+			res.redirect("/404.html");
+			break;
+	}
+});
+
+// 근데 post 방식에서도 params 를 쓸 수있는거야..? 아직 post방식이 어떻게 작동하는지 잘 모르겠어..
+app.post("/api/:type", (req, res) => {
+	var type = req.params.type;
+	var id = req.body.id;
+	var pw = req.body.pw;
+	var page = req.body.page;
+	var sql = "";
+	var vals = [];
+	var result;
+	var html;
+	switch(type) {
 		case "remove":
-			if(id === undefined || pw === undefined) req.redirect("/500.html");
+			if(id === undefined || pw === undefined) res.redirect("/500.html");
 			else {
 				sql = "DELETE FROM gbook WHERE id=? AND pw=?";
 				vals.push(id);
 				vals.push(pw);
 				(async () => {
 					result = await sqlExec(sql, vals);
-					res.json(result);
+					if(result[0].affectedRows == 1)	res.redirect("/gbook/li"+page);
+					else {
+						html = `
+						<meta charset="utf-8">
+						<script>
+							alert("패스워드가 올바르지 않습니다.");
+							history.go(-1);
+						</script>
+						`;
+						res.send(html);
+					}
 				})();
 			}
 			break;
@@ -152,6 +182,8 @@ app.get("/api/:type", (req, res) => {
 			break;
 	}
 });
+
+
 
 // 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 // 페이지 디자인만 보여줌
