@@ -44,7 +44,7 @@ $("#gbook-tb td").not(":last-child").click(function(){
 });
 
 
-// 삭제
+// 삭제기능
 $(".btRev").click(function(){
 	var id = $(this).parent().parent().children("td").eq(0).text();
 	$("form[name='removeForm']").find("input[name='id']")
@@ -53,9 +53,35 @@ $(".btRev").click(function(){
 	$("#remove-modal").find("input[name='pw']").focus();
 	$("#remove-modal").modal("show");
 	$(".sendRev").click(function(){
-
 	});
 });
+
+
+// 수정기능
+$(".btChg").click(function(){
+	var id = $(this).parent().parent().children("td").eq(0).text(); //button이 해당하는 id 가져오기
+	$("#update-modal").find("input[name='id']").val(id);
+	$.ajax({
+		type: "get",
+		url: "/api/modalData",
+		data: {id: id},
+		dataType: "json",
+		success: function (res) {
+			$("form[name='upForm']").find("input[name='writer']").val(res.writer);
+			$("form[name='upForm']").find("textarea[name='comment']").val(res.comment);
+			$("#update-modal").modal("show");
+		}
+	});
+});
+
+function onChg(f) {
+	if(f.writer)
+
+	f.pw
+	f.commnent
+}
+
+
 
 
 function onRev(f) {

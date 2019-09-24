@@ -128,7 +128,7 @@ app.get("/api/:type", (req, res) => {
 	var result;
 	switch(type) {
 		case "modalData":
-			if(id === undefined) req.redirect("/500.html");
+			if(id === undefined) res.redirect("/500.html");
 			else {
 				sql = "SELECT * FROM gbook WHERE id=?";
 				vals.push(id); //배열 vals의 0번째에 id를 넣음
@@ -163,17 +163,17 @@ app.post("/api/:type", (req, res) => {
 				vals.push(pw);
 				(async () => {
 					result = await sqlExec(sql, vals);
-					if(result[0].affectedRows == 1)	res.redirect("/gbook/li"+page);
-					else {
-						html = `
-						<meta charset="utf-8">
-						<script>
-							alert("패스워드가 올바르지 않습니다.");
-							history.go(-1);
-						</script>
-						`;
-						res.send(html);
+					html = `<meta charset="utf-8"><script>`;
+					if(result[0].affectedRows == 1)	{
+						html +=	'alert("삭제되었습니다.");';
+						html += 'location.href = "/gbook/li/'+page+'";';
 					}
+					else {
+						html += 'alert("패스워드가 올바르지 않습니다.");';
+						html += `history.go(-1);`;
+					}
+					html += '</script>'
+					res.send(html);
 				})();
 			}
 			break;
