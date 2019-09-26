@@ -1,5 +1,4 @@
 
-
 function onSend(f) {
  console.log(f);
  if(f.writer.value.trim() == "") {
@@ -61,6 +60,18 @@ $(".btRev").click(function(){
 $(".btChg").click(function(){
 	var id = $(this).parent().parent().children("td").eq(0).text(); //button이 해당하는 id 가져오기
 	$("#update-modal").find("input[name='id']").val(id);
+	upAjax(id);
+});
+
+//다시작성
+function onReset() {
+	var id = $("form[name='upForm']").find("input[name='id']").val(); //button이 해당하는 id 가져오기
+	// $("#update-modal").find("input[name='id']").val(id);
+	upAjax(id);
+}
+
+// 공통사항 AJAX 함수화
+function upAjax(id) {
 	$.ajax({
 		type: "get",
 		url: "/api/modalData",
@@ -72,18 +83,9 @@ $(".btChg").click(function(){
 			$("#update-modal").modal("show");
 		}
 	});
-});
-
-function onChg(f) {
-	if(f.writer)
-
-	f.pw
-	f.commnent
 }
 
-
-
-
+// 삭제 컨펌
 function onRev(f) {
 	if(f.id.value.trim() === "") {
 		alert("삭제할 데이터의 id가 필요합니다.");
@@ -97,6 +99,10 @@ function onRev(f) {
 	return true; //f(form)을 전송
 }
 
+
+
+// $(f).find("input[name='writer']").val().trim() //jQuery 접근
+// f.writer.value.trim() //jQuery 접근
 
 // $("#bt-close").click(function(){
 // 	$("#gbook-modal").modal('hide');

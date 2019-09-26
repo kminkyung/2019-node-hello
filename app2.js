@@ -150,6 +150,8 @@ app.post("/api/:type", (req, res) => {
 	var id = req.body.id;
 	var pw = req.body.pw;
 	var page = req.body.page;
+	var writer = req.body.writer;
+	var comment = req.body.comment;
 	var sql = "";
 	var vals = [];
 	var result;
@@ -177,6 +179,14 @@ app.post("/api/:type", (req, res) => {
 				})();
 			}
 			break;
+		// case "update":
+		// 	sql = "UPDATE gbook SET ? WHERE id=?";
+		// 	vals.push(id);
+		// 	(async () => {
+		// 		result = await sqlExec(sql, vals);
+		// 		res.json();
+		// 	})();
+		// 	break;
 		default:
 			res.redirect("/404.html");
 			break;
