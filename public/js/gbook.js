@@ -49,11 +49,11 @@ $(".btRev").click(function(){
 	$("form[name='removeForm']").find("input[name='id']")
 	$("#remove-modal").find("input[name='id']").val(id);
 	$("#remove-modal").find("input[name='pw']").val('');
-	$("#remove-modal").find("input[name='pw']").focus();
 	$("#remove-modal").modal("show");
-	$(".sendRev").click(function(){
-	});
 });
+	$("#remove-modal").on("shown.bs.modal", function(){
+		$("#remove-modal").find("input[name='pw']").focus();
+	});// 이 이벤트는 밖에 나와있어야 함. (안그러면 이벤트가 중첩?되나?)
 
 
 // 수정기능
