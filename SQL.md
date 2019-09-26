@@ -52,3 +52,9 @@ DELETE FROM gbook WHERE id=5
 ```
 
 ## 데이터 수정
+```sql
+-- 수정 SQL - WHERE절이 없으면 모든 데이터가 같이 수정되므로... RG?
+-- 실무에서는 SQL을 Sequel 이라고 함 
+UPDATE 테이블명 SET 필드명1='값', 필드명2='값' WHERE 조건;
+UPDATE 테이블명 SET writer='홍길동', comment='안녕' WHERE id=5;
+```

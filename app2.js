@@ -179,14 +179,27 @@ app.post("/api/:type", (req, res) => {
 				})();
 			}
 			break;
-		// case "update":
-		// 	sql = "UPDATE gbook SET ? WHERE id=?";
-		// 	vals.push(id);
-		// 	(async () => {
-		// 		result = await sqlExec(sql, vals);
-		// 		res.json();
-		// 	})();
-		// 	break;
+		case "update":
+			sql = "UPDATE gbook SET writer=?, comment=? WHERE id=? AND pw=?";
+			vals.push(writer);
+			vals.push(comment);
+			vals.push(id);
+			vals.push(pw);
+			(async () => {
+				result = await sqlExec(sql, vals);
+				html = `<meta charset="utf-8"><script>`;
+				if(result[0].affectedRows == 1)	{
+					html +=	'alert("수정되었습니다.");';
+					html += 'location.href = "/gbook/li/'+page+'";';
+				}
+				else {
+					html += 'alert("패스워드가 올바르지 않습니다.");';
+					html += `history.go(-1);`;
+				}
+				html += '</script>'
+				res.send(html);
+			})();
+			break;
 		default:
 			res.redirect("/404.html");
 			break;

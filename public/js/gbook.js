@@ -63,7 +63,7 @@ $(".btChg").click(function(){
 	upAjax(id);
 });
 
-//다시작성
+//다시작성 (근데 여기 비밀번호도 다시 reset해주어야 하는거 같음..)
 function onReset() {
 	var id = $("form[name='upForm']").find("input[name='id']").val(); //button이 해당하는 id 가져오기
 	// $("#update-modal").find("input[name='id']").val(id);
