@@ -17,7 +17,7 @@ const splitName = (file) => {
 }
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname,'public/uploads/sample')); // 이거 모르겠어. __dirname 상수는 file이 존재하는 절대경로+public/uploads/sample를 join() __dirname+경로를 붙여줌
+    cb(null, path.join(__dirname,'public/uploads/sample')); // 이거 모르겠어. __dirname 상수는 (path의)file이 존재하는 절대경로+public/uploads/sample를 join() __dirname+경로를 붙여줌
   },
   filename: (req, file, cb) => {
 		var newFile = splitName(file.originalname);

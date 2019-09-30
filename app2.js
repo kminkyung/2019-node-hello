@@ -10,10 +10,11 @@ app.listen(port, () => {
 const bodyParser = require("body-parser"); //node_modules 의 body-parser import, post방식받기
 
 // modules 참조 (내가 만든 것들)
-const util = require("./modules/util")
-const db = require("./modules/mysql_conn")
-const pager = require("./modules/pager")
+const util = require("./modules/util");
+const db = require("./modules/mysql_conn");
+const pager = require("./modules/pager");
 // import {val1, val2} from "./modules/pager";
+const mt = require("./modules/multer_conn");
 
 // 전역변수 선언
 const sqlPool = db.sqlPool; //mysql_conn 에서 export 한 변수
@@ -245,13 +246,22 @@ app.get("/gbook_ajax/:page", (req, res) => {
 
 
 // Router 영역 - POST
-app.post("/gbook_save", (req, res) => {
-	var writer = req.body.writer;
-	var pw = req.body.pw;
-	var comment = req.body.comment;
-	var sql = "INSERT INTO gbook SET comment=?, wtime=?, writer=?, pw=?";
-	var vals = [comment, util.dspDate(new Date()), writer, pw];
-	sqlExec(sql, vals).then((data) => {
-		res.redirect("/gbook");
-	}).catch(sqlErr);
+app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => {
+	const writer = req.body.writer;
+	const pw = req.body.pw;
+	const comment = req.body.comment;
+	var orifile = ""; //file을 업로드 안했으면 빈문자열로
+	var savefile = "";
+	if(req.file) {
+		orifile = req.file.originalname; //file을 업로드했으면
+		savefile = req.file.filename;
+	}
+	var result;
+	var sql = "INSERT INTO gbook SET comment=?, wtime=?, writer=?, pw=?, orifile=?, savefile=?";
+	var vals = [comment, util.dspDate(new Date()), writer, pw, orifile, savefile];
+	(async () => {
+	 result =	await sqlExec(sql, vals);
+	 if(result[0].affectedRows > 0) res.redirect("/gbook");
+	 else res.redirect("/500.html");
+	})();
 });
