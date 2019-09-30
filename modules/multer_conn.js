@@ -20,7 +20,10 @@ const fileExt = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip
 const chkExt = (req, file, cb) => {
 	var ext = splitName(file.originalname).ext.toLowerCase();
 	if(imgExt.indexOf(ext) > -1 || fileExt.indexOf(ext) > -1) cb(null, true);
-	else cb(null, false);
+	else {
+		req.fileValidateError = "Y"; // 쌤이 만든 변수, 아무말이나 넣어도 됨
+		cb(null, false);
+	}
 }
 // indexOf() : 배열(imgExt) 안에 찾는 문자열이 없으면 -1을 반환한다.
 // false면 업로드할 수 없다. true 면 업로드
@@ -30,12 +33,14 @@ const chkExt = (req, file, cb) => {
 const getPath = () => {
 	var dir = makePath(); // dir: 1909 
 	// console.log(dir);
-	var newPath = path.join(__dirname + "../public/uploads/" + dir);
+	var newPath = path.join(__dirname, "../public/uploads/" + dir);
 	if(!fs.existsSync(newPath)) { //path안에 폴더가 존재하지 않으면 폴더를 생성한다(file system이 하는 일)).
-		fs.mkdir(newPath, (err) => { //mkdir : make directory (폴더생성)
+		fs.mkdir(newPath, (err) => { 
+			//mkdir : make directory (폴더생성)
 			if(err) new Error("폴더를 생성할 수 없습니다.");
 		});
 	}
+	console.log(newPath);
 	return newPath;
 }
 const makePath = () => {

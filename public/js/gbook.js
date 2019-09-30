@@ -1,23 +1,35 @@
 
 function onSend(f) {
- console.log(f);
- if(f.writer.value.trim() == "") {
-	 alert("작성자를 입력하세요.");
-	 f.writer.focus();
-	 return false;
- }
- if(f.pw.value.trim() == "" || f.pw.value.trim().length > 16 || f.pw.value.trim().length < 6) { // ||< or
-	 alert("비밀번호는 6~16 자로 입력하세요.");
-	 f.pw.focus();
-	 return false;
- }
- if(f.comment.value.trim() == "") {
-	 alert("내용을 입력하세요.");
-	 f.comment.focus();
-	 return false;
- }
- return true;
+	if(f.writer.value.trim() == "") {
+		alert("작성자를 입력하세요.");
+		f.writer.focus();
+		return false;
+	}
+	if(f.pw.value.trim() == "" || f.pw.value.trim().length > 16 || f.pw.value.trim().length < 6) { // ||< or
+		alert("비밀번호는 6~16 자로 입력하세요.");
+		f.pw.focus();
+		return false;
+	}
+	if(f.comment.value.trim() == "") {
+		alert("내용을 입력하세요.");
+		f.comment.focus();
+		return false;
+	}
+	if(f.upfile) {
+		var file = $(f.upfile).val();
+		var arr = file.split(".");
+		var ext = arr.pop();
+		var img = ["jpg", "jpeg", "png", "gif"];
+		var file = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
+		if(img.indexOf(ext) > -1 || file.indexOf(ext) > -1) return true;
+		else {
+			alert("허용되지 않는 파일입니다.");
+			return false;
+		}
+	}
+	return true;
 }
+
 
 $(".page-item").click(function(){
 	var n = $(this).data("page");
@@ -66,8 +78,9 @@ $(".btChg").click(function(){
 //다시작성 (근데 여기 비밀번호도 다시 reset해주어야 하는거 같음..)
 function onReset() {
 	var id = $("form[name='upForm']").find("input[name='id']").val(); //button이 해당하는 id 가져오기
+	var pw = $("form[name='upForm']").find("input[name='pw']").val(''); //button이 해당하는 id 가져오기
 	// $("#update-modal").find("input[name='id']").val(id);
-	upAjax(id);
+	upAjax(id, pw);
 }
 
 // 공통사항 AJAX 함수화

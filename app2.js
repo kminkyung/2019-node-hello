@@ -246,7 +246,7 @@ app.get("/gbook_ajax/:page", (req, res) => {
 
 
 // Router 영역 - POST
-app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => {
+app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이 안올라가면 req 변수에 "Y"가 붙어있는 상태
 	const writer = req.body.writer;
 	const pw = req.body.pw;
 	const comment = req.body.comment;
@@ -261,7 +261,17 @@ app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => {
 	var vals = [comment, util.dspDate(new Date()), writer, pw, orifile, savefile];
 	(async () => {
 	 result =	await sqlExec(sql, vals);
-	 if(result[0].affectedRows > 0) res.redirect("/gbook");
+	 if(result[0].affectedRows > 0) {
+		 if(req.fileValidateError == "Y") {
+			 html = '<mate charset="utf-8">';
+			 html += '<script>';
+			 html += 'alert("업로드가 허용되지 않는 파일이므로 파일은 업로드 되지 않았습니다.");';
+			 html += 'location.href = "/gbook";';
+			 html += '</script>';
+			 res.send(html);
+		 }
+		else res.redirect("/gbook");
+	 }
 	 else res.redirect("/500.html");
 	})();
 });
