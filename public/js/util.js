@@ -162,3 +162,22 @@ function pagerMaker($pager, grpCnt, divCnt, total, page, cb) {
 	$(".page-item").css({"cursor":"pointer"});
 	$(".page-item").click(cb);
 }
+
+
+var imgExt = ["jpg", "jpeg", "png", "gif"];
+var fileExt = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
+
+function splitName(file) {
+	var arr = file.split("."); 
+	var obj = {};
+	obj.ext = arr[1]; // timestamp+random.ext <- index1 
+	obj.name = arr[0]; // timestamp+random <- index0 .ext 
+	return obj;
+}
+
+function findPath(d) {
+	var year = String(d.getFullYear()).substr(2);
+	var month = d.getMonth() + 1; // 어차피 String인 year를 더할 것이므로 (숫자+문자=문자) String()을 하지 않았다.
+	if(month < 10) month = "0" + month; // 1~12 만들기, 만약 9가 10보다 작으면 0을 붙이고 month에 1을 더한다. 
+	return year + month; 
+}

@@ -46,6 +46,32 @@ $("#gbook-tb td").not(":last-child").click(function(){
 		data: {id: id},
 		dataType: "json",
 		success: function (res) {
+			// 초기화
+			$("#gbook-modal").find(".img-tr").addClass("d-none"); 
+			$("#gbook-modal").find(".img-tr").find("img").attr("src", ""); 
+			$("#gbook-modal").find(".file-tr").addClass("d-none");
+			$("#gbook-modal").find(".file-tr").find("a").attr("href", "#");
+			$("#gbook-modal").find(".file-tr").find("a").text("");
+
+			if(res.savefile != null && res.savefile != "") {
+				var file = splitName(res.savefile); // splitName()을 바로 쓸 수 있는 이유가 pug로 gbook.js/util.js로 연결해놓았기 때문.
+				var ext = file.ext.toLowerCase();
+				var ts = Number(file.name.split("-")[0]); // timestamp값만 가지고 오고 random 을 떨구려고. 인덱스를 바로 써서 두 줄로 안쓰고 한 줄로 쓸 수 있구나
+				var dir = findPath(new Date(ts)); //
+				var path = "/uploads/"+dir+"/"+res.savefile;
+
+				if(fileExt.indexOf(ext) > -1) { //왜 img가 아니라 file을 먼저 찾는가 : 보안상의 이유, img를 먼저 찾으면 if문을 통과, a링크가 걸리게됨
+					//첨부파일
+					$("#gbook-modal").find(".file-tr").removeClass("d-none");
+					$("#gbook-modal").find(".file-tr").find("a").attr("href", path);
+					$("#gbook-modal").find(".file-tr").find("a").text(res.orifile);
+				}
+				else {
+					//첨부이미지
+					$("#gbook-modal").find(".img-tr").removeClass("d-none"); 
+					$("#gbook-modal").find(".img-tr").find("img").attr("src", path); 
+				}
+			}
 			$("#gbook-modal tr").eq(0).children("td").eq(1).html(res.writer);
 			$("#gbook-modal tr").eq(1).children("td").eq(1).html(dspDate(new Date(res.wtime)));
 			$("#gbook-modal tr").eq(2).children("td").find("div").html(res.comment);
