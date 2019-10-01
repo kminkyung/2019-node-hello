@@ -19,9 +19,12 @@ const imgExt = ["jpg", "jpeg", "png", "gif"];
 const fileExt = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
 const chkExt = (req, file, cb) => {
 	var ext = splitName(file.originalname).ext.toLowerCase();
-	if(imgExt.indexOf(ext) > -1 || fileExt.indexOf(ext) > -1) cb(null, true);
+	if(imgExt.indexOf(ext) > -1 || fileExt.indexOf(ext) > -1) {
+		req.fileValidateError = true; 
+		cb(null, true);
+	} 
 	else {
-		req.fileValidateError = "Y"; // 쌤이 만든 변수, 아무말이나 넣어도 됨
+		req.fileValidateError = false; // 쌤이 만든 변수, 아무말이나 넣어도 됨
 		cb(null, false);
 	}
 }
@@ -30,10 +33,11 @@ const chkExt = (req, file, cb) => {
 
 
 // 저장될 폴더를 생성
+// 1. 생성할 폴더가 존재하면 폴더절대경로 문자열을 리턴
+// 2. 생성할 폴더가 존재하지 않으면 폴더를 생성한 후 폴더의 절대경로 리턴
 const getPath = () => {
-	var dir = makePath(); // dir: 1909 
 	// console.log(dir);
-	var newPath = path.join(__dirname, "../public/uploads/" + dir);
+	var newPath = path.join(__dirname, "../public/uploads/" + makePath());
 	if(!fs.existsSync(newPath)) { //path안에 폴더가 존재하지 않으면 폴더를 생성한다(file system이 하는 일)).
 		fs.mkdir(newPath, (err) => { 
 			//mkdir : make directory (폴더생성)
@@ -43,13 +47,14 @@ const getPath = () => {
 	console.log(newPath);
 	return newPath;
 }
+
+// 자바스크립트 Data객체에서 현재의 년도와 월을 (예: 1909) 문자열로 리턴한다.
 const makePath = () => {
 	const d = new Date(); // 2019-09-30 16:29:22 +GMT()
-	var year = d.getFullYear() + ""; // return 2019(Number), 숫자에 문자를 더하면 문자가 됨 
-	var month;
-	if(d.getMonth() + 1 < 10) month = "0" + (d.getMonth() + 1) // 1~12 만들기, 만약 9가 10보다 작으면 0을 붙이고 month에 1을 더한다. 
-	else month = "" + (d.getMonth() + 1); // 10보다 작지 않으면 1을 더한다.
-	return year.substr(2) + month; // 2019에서 substr()으로 19만 추출
+	var year = String(d.getFullYear()).substr(2);
+	var month = d.getMonth() + 1; // 어차피 String인 year를 더할 것이므로 (숫자+문자=문자) String()을 하지 않았다.
+	if(month < 10) month = "0" + month; // 1~12 만들기, 만약 9가 10보다 작으면 0을 붙이고 month에 1을 더한다. 
+	return year + month; 
 }
 //getMonth() 0~11
 

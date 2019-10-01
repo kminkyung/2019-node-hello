@@ -15,18 +15,18 @@ function onSend(f) {
 		f.comment.focus();
 		return false;
 	}
-	if(f.upfile) {
-		var file = $(f.upfile).val();
-		var arr = file.split(".");
-		var ext = arr.pop();
-		var img = ["jpg", "jpeg", "png", "gif"];
-		var file = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
-		if(img.indexOf(ext) > -1 || file.indexOf(ext) > -1) return true;
-		else {
-			alert("허용되지 않는 파일입니다.");
-			return false;
-		}
-	}
+	// if(f.upfile) {
+	// 	var file = $(f.upfile).val();
+	// 	var arr = file.split(".");
+	// 	var ext = arr.pop();
+	// 	var img = ["jpg", "jpeg", "png", "gif"];
+	// 	var file = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
+	// 	if(img.indexOf(ext) > -1 || file.indexOf(ext) > -1) return true;
+	// 	else {
+	// 		alert("허용되지 않는 파일입니다.");
+	// 		return false;
+	// 	}
+	// }
 	return true;
 }
 

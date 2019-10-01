@@ -49,7 +49,17 @@ const dspDate = (d, type) => {
 	return returnStr;
 } 
 
+const alertLocation = (obj) => {
+	var html = '<mate charset="utf-8">';
+	html += '<script>';
+	html += 'alert("'+obj.msg+'");';
+	html += 'location.href = "'+obj.loc+'";';
+	html += '</script>';
+	return html;
+};
+
 module.exports = {
 	dspDate,
-	zp
+	zp,
+	alertLocation
 }
