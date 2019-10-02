@@ -63,14 +63,13 @@ const nullchk = (val) => {
 	else return false;
 };
 
-const iconChk = (file) => {
+const iconChk = (dt, file) => { //만약에 file이 없으면 null이라는 초기값을 준다 (ES6)
+	// file?file: null 삼항방정식
 	const obj = {};
-	if(nullchk(file)) {
-		obj[file.split(".").pop()] = true;
-		var tsFile = Number(file.split("-")[0]);
-		var tsNow = new Date().getTime() - (24 * 60 * 60 * 1000); // 현재시간-24시 24시간 전 시간 구하기 
-		if(tsFile >= tsNow) obj.new = true;
-	}
+	if(nullchk(file)) obj[file.split(".").pop()] = true;
+	var tsFile = new Date(dt).getTime();
+	var tsNow = new Date().getTime() - (24 * 60 * 60 * 1000); // 현재시간-24시 24시간 전 시간 구하기 
+	if(tsFile >= tsNow) obj.new = true;
 	return obj;
 }
 
