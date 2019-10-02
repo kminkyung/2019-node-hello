@@ -8,6 +8,8 @@ app.listen(port, () => {
 
 // node_modules 참조
 const bodyParser = require("body-parser"); //node_modules 의 body-parser import, post방식받기
+const path = require("path");
+const fs = require("fs");
 
 // modules 참조 (내가 만든 것들)
 const util = require("./modules/util");
@@ -91,7 +93,8 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				sqlVal = [pagerVal.stRec, pagerVal.grpCnt];
 				result = await sqlExec(sql, sqlVal);
 				vals.datas = result[0];
-
+				for(let item of vals.datas) item.useIcon = util.iconChk(item.savefile); //배열datas를 돌면서 item.useIcon을 추가함
+				console.log(vals.datas);
 				vals.title = "방명록";
 				vals.pager = pagerVal;
 				pug = "gbook";
@@ -157,16 +160,25 @@ app.post("/api/:type", (req, res) => {
 	var vals = [];
 	var result;
 	var obj = {};
+	var savefile = '';
 	switch(type) {
 		case "remove":
 			if(id === undefined || pw === undefined) res.redirect("/500.html");
 			else {
-				sql = "DELETE FROM gbook WHERE id=? AND pw=?";
 				vals.push(id);
 				vals.push(pw);
 				(async () => {
+					// 첨부파일 가져오기
+					sql = "SELECT savefile FROM gbook WHERE id="+id;
+					result = await sqlExec(sql);
+					savefile = result[0][0].savefile;
+					// 실제 데이터베이스 삭제
+					sql = "DELETE FROM gbook WHERE id=? AND pw=?";
 					result = await sqlExec(sql, vals);
-					if(result[0].affectedRows == 1)	obj.msg = "삭제되었습니다.";
+					if(result[0].affectedRows == 1)	{
+						obj.msg = "삭제되었습니다.";
+						if(util.nullchk(savefile)) fs.unlinkSync(path.join(__dirname, "/public/uploads/"+mt.getDir(savefile)+"/"+savefile));
+					}
 					else obj.msg = "비밀번호가 올바르지 않습니다.";
 					obj.loc = "/gbook/li/"+page;
 					res.send(util.alertLocation(obj));
@@ -192,6 +204,19 @@ app.post("/api/:type", (req, res) => {
 			break;
 	}
 });
+
+
+// file download Route
+app.get("/download/", (req, res) => {
+	const fileName = req.query.fileName;
+	const downName = req.query.downName; // 업로드 파일명 (예: desert.jpg)
+	const filePath = path.join(__dirname, "/public/uploads/"+mt.getDir(fileName)+"/") + fileName; 
+// 실제 저장된 파일명 (예: ts-00.jpg)
+res.download(filePath, downName); // download 는 express 가 가지고있는 기능
+});
+
+
+
 
 
 

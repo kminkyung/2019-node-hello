@@ -1,0 +1,19 @@
+.icon {
+	margin-left: 0.5rem;
+	padding: 2px;
+	border-radius: 2px;
+	color: #f9f9f9;
+}
+
+.icon.icon-new {
+	background-color: darksalmon;
+	line-height: 1rem;
+	padding: 2px 3px;
+	display: inline-block;
+}
+.icon.icon-file {
+	background-color: darkseagreen;
+}
+.icon.icon-img {
+	background-color: darkkhaki;
+}

@@ -58,8 +58,26 @@ const alertLocation = (obj) => {
 	return html;
 };
 
+const nullchk = (val) => {
+	if(val !== undefined && val !== null && val !== "") return true;
+	else return false;
+};
+
+const iconChk = (file) => {
+	const obj = {};
+	if(nullchk(file)) {
+		obj[file.split(".").pop()] = true;
+		var tsFile = Number(file.split("-")[0]);
+		var tsNow = new Date().getTime() - (24 * 60 * 60 * 1000); // 현재시간-24시 24시간 전 시간 구하기 
+		if(tsFile >= tsNow) obj.new = true;
+	}
+	return obj;
+}
+
 module.exports = {
 	dspDate,
 	zp,
-	alertLocation
+	alertLocation,
+	nullchk,
+	iconChk
 }

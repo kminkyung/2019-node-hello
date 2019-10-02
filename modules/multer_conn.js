@@ -14,6 +14,18 @@ const splitName = (file) => {
 	return obj;
 }
 
+// 파일명을 받아서 년월(예: 1909) 폴더명을 return
+const getDir = (fileName) => {
+	//1569123123-12.jpg
+	var d = new Date(Number(fileName.split("-")[0])); // october 2019-10-02 GMT 엇저구
+	var year = String(d.getFullYear()).substr(2);
+	var month = d.getMonth() + 1; // 어차피 String인 year를 더할 것이므로 (숫자+문자=문자) String()을 하지 않았다.
+	if(month < 10) month = "0" + month; // 1~12 만들기, 만약 9가 10보다 작으면 0을 붙이고 month에 1을 더한다. 
+	return year + month; 
+}
+
+
+
 // 업로드 가능한 확장자
 const imgExt = ["jpg", "jpeg", "png", "gif"];
 const fileExt = ["hwp", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip", "pdf"];
@@ -81,5 +93,6 @@ module.exports = {
 	multer,
 	chkExt,
 	imgExt,
-	fileExt
+	fileExt,
+	getDir
 }
