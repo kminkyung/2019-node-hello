@@ -94,7 +94,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				result = await sqlExec(sql, sqlVal);
 				vals.datas = result[0];
 				for(let item of vals.datas) item.useIcon = util.iconChk(item.wtime, item.savefile); //배열datas를 돌면서 item.useIcon을 추가함
-				console.log(vals.datas);
+				// console.log(vals.datas);
 				vals.title = "방명록";
 				vals.pager = pagerVal;
 				pug = "gbook";
@@ -149,7 +149,7 @@ app.get("/api/:type", (req, res) => {
 });
 
 // 근데 post 방식에서도 params 를 쓸 수있는거야..? 아직 post방식이 어떻게 작동하는지 잘 모르겠어..
-app.post("/api/:type", (req, res) => {
+app.post("/api/:type", mt.upload.single("upfile"), (req, res) => {
 	var type = req.params.type;
 	var id = req.body.id;
 	var pw = req.body.pw;
@@ -160,7 +160,13 @@ app.post("/api/:type", (req, res) => {
 	var vals = [];
 	var result;
 	var obj = {};
-	var savefile = '';
+	var orifile = ""; //file을 업로드 안했으면 빈문자열로
+	var savefile = "";
+	var oldfile = "";
+	if(req.file) {
+		orifile = req.file.originalname; //file을 업로드했으면
+		savefile = req.file.filename;
+	}
 	switch(type) {
 		case "remove":
 			if(id === undefined || pw === undefined) res.redirect("/500.html");
@@ -186,18 +192,34 @@ app.post("/api/:type", (req, res) => {
 			}
 			break;
 		case "update":
-			sql = "UPDATE gbook SET writer=?, comment=? WHERE id=? AND pw=?";
-			vals.push(writer);
-			vals.push(comment);
-			vals.push(id);
-			vals.push(pw);
-			(async () => {
-				result = await sqlExec(sql, vals);
-				if(result[0].affectedRows == 1)	obj.msg = "수정되었습니다.";					
-				else obj.msg = "비밀번호가 올바르지 않습니다.";
-				obj.loc = "/gbook/li/"+page;
-				res.send(util.alertLocation(obj));
-			})();
+			if(id === undefined || pw === undefined) res.redirect("/500.html");
+			else {
+				vals.push(writer);
+				vals.push(comment);
+				if(req.file) vals.push(orifile);
+				if(req.file) vals.push(savefile);
+				vals.push(id);
+				vals.push(pw);
+				(async () => {
+					// 첨부파일 가져오기
+					sql = "SELECT savefile FROM gbook WHERE id="+id;
+					result = await sqlExec(sql);
+					oldfile = result[0][0].savefile;
+					// 실제 데이터 수정
+					sql = "UPDATE gbook SET writer=?, comment=? ";
+					if(req.file) sql += ", orifile=?, savefile=?";
+					sql += "WHERE id=? AND pw=?";
+					result = await sqlExec(sql, vals);
+					if(result[0].affectedRows == 1)	{
+						obj.msg = "수정되었습니다.";
+						// 기존파일 삭제하기
+						if(req.file && util.nullchk(oldfile)) fs.unlinkSync(path.join(__dirname, "/public/uploads/"+mt.getDir(oldfile)+"/"+oldfile));
+					}
+					else obj.msg = "비밀번호가 올바르지 않습니다.";
+					obj.loc = "/gbook/li/"+page;
+					res.send(util.alertLocation(obj));
+				})();
+			}
 			break;
 		default:
 			res.redirect("/404.html");

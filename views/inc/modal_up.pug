@@ -2,7 +2,7 @@
 	.modal-dialog.modal-dialog-centered(role="document")
 		.modal-content
 			.modal-body
-				form(action="/api/update", method="post", name="upForm", onsubmit="return onSend(this)")
+				form(action="/api/update", enctype="multipart/form-data", method="post", name="upForm", onsubmit="return onSend(this)")
 					input(type="hidden", name="id")
 					input(type="hidden", name="page", value=`${pager.page}`)
 					table.table.table-hover
@@ -19,8 +19,21 @@
 										span.text-danger * 글 작성시 입력한 비밀번호를 넣어주세요.
 								tr
 									td.bg-dark.text-light.text-center 내용
-									td 
+									td
 										textarea.form-control(name="comment", style="height: 200px")
+								tr.img-tr.d-none
+									td.bg-dark.text-light.text-center 첨부이미지
+									td
+										img.w-100(style="max-width:350px;")
+								tr.file-tr.d-none
+									td.bg-dark.text-light.text-center 첨부파일
+									td
+										a
+								tr
+									td.bg-dark.text-light.text-center.d-none.up-td 첨부파일
+									td
+										input.form-control-file(type="file", name="upfile")
+										span.text-danger * 첨부파일을 변경하시려면 추가하세요.
 					.my-3.text-center
 						button.btn.btn-success 수정
 						button.btn.btn-danger(type="button", onclick="onReset()") 다시작성
