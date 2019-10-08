@@ -160,6 +160,30 @@ function onRev(f) {
 	return true; //f(form)을 전송
 }
 
+// POPUP
+function popOpen() {
+	setTimeout(function() {
+		$(".popup-bg").css("display", "flex");
+		setTimeout(function(){
+			$(".popup-wrap").css({"opacity": 1, "transform": "translateY(0)", "transition": "all 0.5s"});
+		}, 100);
+	}, 500);
+}
+$.removeCookie("popChk");
+if($.cookie("popChk") !== "true") popOpen();
+// console.log($.cookie("popChk"));
+
+$(".popup-close, .popup-close2").click(function(){
+	// attribute - 마음대로 값을 바꿀 수 있는 속성
+	// property - 정해져있는 속성
+	// <input type="text" checked>
+	var chk = $("#popOut").prop("checked");
+	// $.cookie("변수명", "변수값, {expires(쿠기가 만료되는 시점): 1(하루))})
+	$.cookie("popChk", chk, {expires: 1});
+	$(".popup-bg").css("display", "none");
+	$(".popup-wrap").css({"opacity": 0, "transform": "translateY(-100%)"});
+});
+
 
 
 // $(f).find("input[name='writer']").val().trim() //jQuery 접근
