@@ -73,10 +73,13 @@ const iconChk = (dt, file) => { //만약에 file이 없으면 null이라는 초�
 	return obj;
 }
 
+const telNum = ["010", "011", "016", "017", "018", "019", "02", "051", "052", "053", "055", "031", "032", "033", "061", "062", "063", "064", "041","042", "044", "043" ]
+
 module.exports = {
 	dspDate,
 	zp,
 	alertLocation,
 	nullchk,
-	iconChk
+	iconChk,
+	telNum
 }

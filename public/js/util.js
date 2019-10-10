@@ -181,3 +181,10 @@ function findPath(d) {
 	if(month < 10) month = "0" + month; // 1~12 만들기, 만약 9가 10보다 작으면 0을 붙이고 month에 1을 더한다. 
 	return year + month; 
 }
+
+
+function telChk(obj){
+	if (String(obj.value).length > 4){
+		obj.value = obj.value.slice(0, 4);
+	}    
+}

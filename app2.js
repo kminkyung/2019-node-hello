@@ -306,3 +306,70 @@ app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이
 	 else res.redirect("/500.html");
 	})();
 });
+
+
+/* 회원가입 및 로그인 등 */
+
+/* 회원 라우터 */
+app.get("/mem/:type", memEdit); // 회원가입, id/pw찾기, 회원리스트, 회원정보
+app.post("/api-mem/:type", memApi); // 회원가입시 각종 Ajax
+app.post("/mem/join", memJoin); // 회원가입 저장
+
+/* 함수구현 - GET */
+function memEdit(req, res) {
+	// 여기서 왜 함수표현식과 arrow function을 안썼냐면 함수선언문을 써야 hoisting 되서 밑에 있어도 찾을 수 있으므로.
+	const type = req.params.type;
+	const vals = {css: "mem", js: "mem"};
+	switch(type) {
+		case "join":
+			vals.title = "회원가입";
+			vals.tel = util.telNum;
+			res.render("mem_in", vals);
+			break;
+		default:
+			break;
+	}
+}
+
+/* 함수구현 - POST */
+function memApi(req, res) {
+	const type= req.params.type;
+	var sql ="";
+	var sqlVals = [];
+	var result;
+	switch(type) {
+		case "userid":
+			const userid = req.body.userid;
+			(async() => {
+				sql = "SELECT count(id) FROM member WHERE userid=?"
+				sqlVals.push(userid);
+				result = await sqlExec(sql, sqlVals);
+				// res.json(result[0][0]["count(id)"]);
+				if(result[0][0]["count(id)"] > 0) res.json({chk: false});
+				else res.json({chk: true});
+			})();
+			break;
+		default:
+			breadk;
+	}
+}
+/* 회원가입저장 */
+function memJoin(req, res) {
+	const vals = [];
+	vals.push(req.body.userid);
+	vals.push(req.body.userpw);
+	vals.push(req.body.username);
+	vals.push(req.body.tel1 + "-" + req.body.tel2 + "-" + req.body.tel3);
+	vals.push(req.body.post);
+	vals.push(req.body.addr1 + req.body.addr2);
+	vals.push(req.body.addr3);
+	vals.push(new Date());
+	vals.push(2);
+	var sql = "";
+	var result = {};
+	(async() => {
+		sql = "INSERT INTO member SET userid=?, userpw=?, username=?, tel=?, post=?, add1=?, add2=?, wtime=?, grade=?";
+		result = await sqlExec(sql, vals);
+		res.json(result);
+	})();
+}
