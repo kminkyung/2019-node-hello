@@ -10,6 +10,9 @@ app.listen(port, () => {
 const bodyParser = require("body-parser"); //node_modules 의 body-parser import, post방식받기
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+const session = require("express-session");
+const store = require("session-file-store")(session);
 
 // modules 참조 (내가 만든 것들)
 const util = require("./modules/util");
@@ -23,10 +26,18 @@ const sqlPool = db.sqlPool; //mysql_conn 에서 export 한 변수
 const sqlExec = db.sqlExec;
 const sqlErr = db.sqlErr;
 const mysql = db.mysql; //mysql2/promise
+const salt = "My Password Key"; // 알려지면 안되는 key값
+var loginId;
 
 // app 초기화(설정)
 app.use("/", express.static("./public"));
 app.use(bodyParser.urlencoded({extended: true})); //body-parser setting
+app.use(session({
+	secret: salt,
+	resave: false, 
+	saveUninitialized: true,
+	store: new store()
+}));  
 app.set("view engine", "pug");//view를 랜더링해주는 엔진은 pug를 쓸 것, "view engine"은 app이 가지는 속성값
 app.set("views", "./views"); //view들이 담기는 공간은, ./views 
 app.locals.pretty = true; //locals(property).pretty(property) ???이게 뭘까??
@@ -43,7 +54,7 @@ app.get(["/page", "/page/:page"], (req, res) => {
 	var title = "도서목록"
 	var css = "page";
 	var js = "page";
-	var vals = {page, title, css, js}; //{page: pager, title: title}
+	var vals = {page, title, css, js, loginId}; //{page: pager, title: title}
 	res.render("page", vals);
 });
 
@@ -55,6 +66,7 @@ type: up/1(id) - 수정
 type: rm/1(id) - 삭제
 */
 app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/in, list 해도 /gbook/:type으로 들어옴
+	loginId = req.session.userid; // login : 저장된 userid, 미login : undefined.
 	var type = req.params.type;
 	var id = req.params.id;
 	if(type == undefined) type = "li";
@@ -62,7 +74,8 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 	if(id == undefined && type !== "in") res.redirect("/404.html");
 	var vals = {
 		css: "gbook",
-		js: "gbook"
+		js: "gbook",
+		loginId
 	}
 	var pug;
 	var sql;
@@ -245,10 +258,11 @@ res.download(filePath, downName); // download 는 express 가 가지고있는 �
 // 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 // 페이지 디자인만 보여줌
 app.get("/gbook_ajax", (req, res) => {
+	loginId = req.session.userid;
 	var title = "방명록 - Ajax";
 	var css = "gbook_ajax";
 	var js = "gbook_ajax";
-	var vals = {title, css, js};
+	var vals = {title, css, js, loginId};
 	res.render("gbook_ajax", vals);
 });
 
@@ -311,20 +325,30 @@ app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이
 /* 회원가입 및 로그인 등 */
 
 /* 회원 라우터 */
-app.get("/mem/:type", memEdit); // 회원가입, id/pw찾기, 회원리스트, 회원정보
+app.get("/mem/:type", memEdit); // 회원가입, id/pw찾기, 회원리스트, 회원정보, 로그인/로그아웃
 app.post("/api-mem/:type", memApi); // 회원가입시 각종 Ajax
 app.post("/mem/join", memJoin); // 회원가입 저장
+app.post("/mem/login", memLogin); // 회원 로그인 모듈
 
 /* 함수구현 - GET */
 function memEdit(req, res) {
 	// 여기서 왜 함수표현식과 arrow function을 안썼냐면 함수선언문을 써야 hoisting 되서 밑에 있어도 찾을 수 있으므로.
+	loginId = req.session.userid;
 	const type = req.params.type;
-	const vals = {css: "mem", js: "mem"};
+	const vals = {css: "mem", js: "mem", loginId};
 	switch(type) {
 		case "join":
 			vals.title = "회원가입";
 			vals.tel = util.telNum;
 			res.render("mem_in", vals);
+			break;
+		case "login":
+			vals.title = "회원로그인";
+			res.render("mem_login", vals)
+			break;
+		case "logout":
+			req.session.destroy();
+			res.redirect("/");
 			break;
 		default:
 			break;
@@ -350,14 +374,15 @@ function memApi(req, res) {
 			})();
 			break;
 		default:
-			breadk;
+			break;
 	}
 }
 /* 회원가입저장 */
 function memJoin(req, res) {
 	const vals = [];
+	var userpw= crypto.createHash("sha512").update(req.body.userpw + salt).digest("base64");
 	vals.push(req.body.userid);
-	vals.push(req.body.userpw);
+	vals.push(userpw);
 	vals.push(req.body.username);
 	vals.push(req.body.tel1 + "-" + req.body.tel2 + "-" + req.body.tel3);
 	vals.push(req.body.post);
@@ -370,6 +395,36 @@ function memJoin(req, res) {
 	(async() => {
 		sql = "INSERT INTO member SET userid=?, userpw=?, username=?, tel=?, post=?, add1=?, add2=?, wtime=?, grade=?";
 		result = await sqlExec(sql, vals);
-		res.json(result);
+		res.send(util.alertLocation({
+			msg: "가입되었습니다.",
+			loc: "/mem/login"
+		}))
 	})();
 }
+
+/* 로그인 처리 모듈 */
+function memLogin(req, res) {
+	var userid = req.body.loginid;
+	var userpw = req.body.loginpw;
+	var result;
+	var sql = "";
+	var vals = [];
+	userpw = crypto.createHash("sha512").update(userpw + salt).digest("base64");
+	(async () => {
+		sql = "SELECT count(id) FROM member WHERE userid=? AND userpw=?"
+		vals.push(userid);
+		vals.push(userpw);
+		result = await sqlExec(sql, vals);
+		if(result[0][0]["count(id)"] == 1) {
+			req.session.userid = userid;
+			res.redirect("/");
+		}
+		else {
+			req.session.destroy();
+			res.send(util.alertLocation({
+				msg: "아이디 또는 패스워드가 틀렸습니다.",
+				loc: "/mem/login"
+			}))
+		}
+	})()
+} 
