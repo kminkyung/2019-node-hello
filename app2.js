@@ -27,7 +27,7 @@ const sqlExec = db.sqlExec;
 const sqlErr = db.sqlErr;
 const mysql = db.mysql; //mysql2/promise
 const salt = "My Password Key"; // 알려지면 안되는 key값
-var loginId;
+var loginUser = {};
 
 // app 초기화(설정)
 app.use("/", express.static("./public"));
@@ -54,7 +54,7 @@ app.get(["/page", "/page/:page"], (req, res) => {
 	var title = "도서목록"
 	var css = "page";
 	var js = "page";
-	var vals = {page, title, css, js, loginId}; //{page: pager, title: title}
+	var vals = {page, title, css, js, loginUser}; //{page: pager, title: title}
 	res.render("page", vals);
 });
 
@@ -66,16 +66,17 @@ type: up/1(id) - 수정
 type: rm/1(id) - 삭제
 */
 app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/in, list 해도 /gbook/:type으로 들어옴
-	loginId = req.session.userid; // login : 저장된 userid, 미login : undefined.
+	loginUser = req.session.user; // login : 저장된 userid, 미login : undefined.
+	// req.session.user = {id: userid, name: username, grade: grade}
 	var type = req.params.type;
 	var id = req.params.id;
-	if(type == undefined) type = "li";
-	if(type == "li" && id == undefined) id = "1";
-	if(id == undefined && type !== "in") res.redirect("/404.html");
+	if(!util.nullchk(type)) type = "li";
+	if(type == "li" && !util.nullchk(id)) id = "1";
+	if(!util.nullchk(id) && type !== "in") res.redirect("/404.html");
 	var vals = {
 		css: "gbook",
 		js: "gbook",
-		loginId
+		loginUser
 	}
 	var pug;
 	var sql;
@@ -92,9 +93,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				var totCnt = 0;
 				var page = id;
 				var divCnt = 3;
-				var grpCnt = req.query.grpCnt;
-				if(grpCnt == undefined || typeof grpCnt !== "number" ) grpCnt = 5; 
-
+				var grpCnt = 5;
 				// sql total count
 				sql = "SELECT count(id) FROM gbook"; 
 				result = await sqlExec(sql);
@@ -102,6 +101,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 
 				// sql startRecord grpCnt
 				const pagerVal = pager.pagerMaker({totCnt, grpCnt, page});
+				pagerVal.link = "/gbook/li/";
 				sql = "SELECT * FROM gbook ORDER BY id DESC limit ?, ?"
 				sqlVal = [pagerVal.stRec, pagerVal.grpCnt];
 				result = await sqlExec(sql, sqlVal);
@@ -258,11 +258,11 @@ res.download(filePath, downName); // download 는 express 가 가지고있는 �
 // 방명록을 Ajax 통신으로 데이터만 보내주는 방식
 // 페이지 디자인만 보여줌
 app.get("/gbook_ajax", (req, res) => {
-	loginId = req.session.userid;
+	loginUser = req.session.user;
 	var title = "방명록 - Ajax";
 	var css = "gbook_ajax";
 	var js = "gbook_ajax";
-	var vals = {title, css, js, loginId};
+	var vals = {title, css, js, loginUser};
 	res.render("gbook_ajax", vals);
 });
 
@@ -287,7 +287,7 @@ app.get("/gbook_ajax/:page", (req, res) => {
 		result = await sqlExec(sql, vals);
 		reData.rs = result[0];
 		res.json(reData);
-		console.log(reData);
+		// console.log(reData);
 	})()
 });
 
@@ -325,7 +325,7 @@ app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이
 /* 회원가입 및 로그인 등 */
 
 /* 회원 라우터 */
-app.get("/mem/:type", memEdit); // 회원가입, id/pw찾기, 회원리스트, 회원정보, 로그인/로그아웃
+app.get(["/mem/:type", "/mem/:type/:id"], memEdit); // 회원가입, id/pw찾기, 회원리스트, 회원정보, 로그인/로그아웃
 app.post("/api-mem/:type", memApi); // 회원가입시 각종 Ajax
 app.post("/mem/join", memJoin); // 회원가입 저장
 app.post("/mem/login", memLogin); // 회원 로그인 모듈
@@ -333,9 +333,10 @@ app.post("/mem/login", memLogin); // 회원 로그인 모듈
 /* 함수구현 - GET */
 function memEdit(req, res) {
 	// 여기서 왜 함수표현식과 arrow function을 안썼냐면 함수선언문을 써야 hoisting 되서 밑에 있어도 찾을 수 있으므로.
-	loginId = req.session.userid;
+	loginUser = req.session.user;
 	const type = req.params.type;
-	const vals = {css: "mem", js: "mem", loginId};
+	const vals = {css: "mem", js: "mem", loginUser};
+	var result;
 	switch(type) {
 		case "join":
 			vals.title = "회원가입";
@@ -349,6 +350,27 @@ function memEdit(req, res) {
 		case "logout":
 			req.session.destroy();
 			res.redirect("/");
+			break;
+		case "list":
+			var page = req.params.id;
+			var totCnt = 0;
+			var divCnt = 3;
+			var grpCnt = 3;
+			if(!util.nullchk(page)) page = "1";
+			vals.title = "회원리스트 - 관리자";
+			(async () => {
+				sql = "SELECT count(id) FROM member"; 
+				result = await sqlExec(sql);
+				totCnt = result[0][0]["count(id)"]; 
+				const pagerVal = pager.pagerMaker({totCnt, grpCnt, page});
+				pagerVal.link = "/mem/list/";
+				sql = "SELECT * FROM member ORDER BY id DESC limit ?, ?";
+				result = await sqlExec(sql, [pagerVal.stRec, pagerVal.grpCnt]);
+				vals.lists = result[0];
+				vals.pager = pagerVal;
+				if(util.adminChk(req.session.user)) res.render("mem_list", vals);
+				else res.send(util.alertAdmin());
+			})();
 			break;
 		default:
 			break;
@@ -411,12 +433,16 @@ function memLogin(req, res) {
 	var vals = [];
 	userpw = crypto.createHash("sha512").update(userpw + salt).digest("base64");
 	(async () => {
-		sql = "SELECT count(id) FROM member WHERE userid=? AND userpw=?"
+		sql = "SELECT * FROM member WHERE userid=? AND userpw=?" // id의 갯수
 		vals.push(userid);
 		vals.push(userpw);
 		result = await sqlExec(sql, vals);
-		if(result[0][0]["count(id)"] == 1) {
-			req.session.userid = userid;
+		// console.log(result[0][0]);
+		if(result[0].length == 1) {
+			req.session.user = {};
+			req.session.user.id = userid;
+			req.session.user.name = result[0][0].username;
+			req.session.user.grade = result[0][0].grade;
 			res.redirect("/");
 		}
 		else {

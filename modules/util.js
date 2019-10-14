@@ -1,9 +1,9 @@
-const zp = (n) => {
+module.exports.zp = (n) => {
 	n<10 ? n = "0" + n : n = n; // 1월부터 9월까지 01~09로 만들고 10부터 0이 붙지않도록 함.
 	return n;
 }
 
-const dspDate = (d, type) => {
+module.exports.dspDate = (d, type) => {
 	var type = typeof type !== 'undefined' ? type : 0;
 	var monthArr = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
 	//for (var i=1; i = monthArr; i++) { i+"월"}
@@ -43,13 +43,13 @@ const dspDate = (d, type) => {
 				returnStr = hour + min + sec;
 			break;
 		default:
-				returnStr = d.getFullYear() + '-' + zp(d.getMonth() + 1) + '-' + zp(d.getDate()) + " " + zp(d.getHours()) + ":" + zp(d.getMinutes()) + ":" + zp(d.getSeconds());
+				returnStr = d.getFullYear() + '-' + module.exports.zp(d.getMonth() + 1) + '-' + module.exports.zp(d.getDate()) + " " + module.exports.zp(d.getHours()) + ":" + module.exports.zp(d.getMinutes()) + ":" + module.exports.zp(d.getSeconds());
 			break;
 	}
 	return returnStr;
 } 
 
-const alertLocation = (obj) => {
+module.exports.alertLocation = (obj) => {
 	var html = '<mate charset="utf-8">';
 	html += '<script>';
 	html += 'alert("'+obj.msg+'");';
@@ -58,28 +58,37 @@ const alertLocation = (obj) => {
 	return html;
 };
 
-const nullchk = (val) => {
+module.exports.nullchk = (val) => {
 	if(val !== undefined && val !== null && val !== "") return true;
 	else return false;
 };
 
-const iconChk = (dt, file) => { //만약에 file이 없으면 null이라는 초기값을 준다 (ES6)
+module.exports.iconChk = (dt, file) => { //만약에 file이 없으면 null이라는 초기값을 준다 (ES6)
 	// file?file: null 삼항방정식
 	const obj = {};
-	if(nullchk(file)) obj[file.split(".").pop()] = true;
+	if(module.exports.nullchk(file)) obj[file.split(".").pop()] = true;
 	var tsFile = new Date(dt).getTime();
 	var tsNow = new Date().getTime() - (24 * 60 * 60 * 1000); // 현재시간-24시 24시간 전 시간 구하기 
 	if(tsFile >= tsNow) obj.new = true;
 	return obj;
 }
 
-const telNum = ["010", "011", "016", "017", "018", "019", "02", "051", "052", "053", "055", "031", "032", "033", "061", "062", "063", "064", "041","042", "044", "043" ]
+module.exports.telNum = ["010", "011", "016", "017", "018", "019", "02", "051", "052", "053", "055", "031", "032", "033", "061", "062", "063", "064", "041","042", "044", "043" ]
 
-module.exports = {
-	dspDate,
-	zp,
-	alertLocation,
-	nullchk,
-	iconChk,
-	telNum
+
+module.exports.adminChk = (obj) => { // req.session.user 를 obj로 전달할 것
+	if(module.exports.nullchk(obj)) {
+		if(obj.grade == 9) return true;
+		else return false;
+	}
+	else return false;
+}
+
+module.exports.alertAdmin = () => {
+	var html = '<mate charset="utf-8">';
+	html += '<script>';
+	html += 'alert("정상적인 접근이 아닙니다.");';
+	html += 'location.href = "/";';
+	html += '</script>';
+	return html;
 }

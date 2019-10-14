@@ -31,10 +31,6 @@ function onSend(f) {
 }
 
 
-$(".page-item").click(function(){
-	var n = $(this).data("page");
-	if(n !== undefined) location.href = "/gbook/li/"+n;
-});
 
 
 // 상세내용보기 - modal POPUP
@@ -169,7 +165,7 @@ function popOpen() {
 		}, 100);
 	}, 500);
 }
-$.removeCookie("popChk");
+// $.removeCookie("popChk");
 if($.cookie("popChk") !== "true") popOpen();
 // console.log($.cookie("popChk"));
 
