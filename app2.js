@@ -95,7 +95,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				var divCnt = 3;
 				var grpCnt = 5;
 				// sql total count
-				sql = "SELECT count(id) FROM gbook"; 
+				sql = "SELECT count(id) FROM gbook";
 				result = await sqlExec(sql);
 				totCnt = result[0][0]["count(id)"]; 
 
@@ -294,9 +294,12 @@ app.get("/gbook_ajax/:page", (req, res) => {
 
 // Router 영역 - POST
 app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이 안올라가면 req 변수에 false가 붙어있는 상태
-	const writer = req.body.writer;
-	const pw = req.body.pw;
-	const comment = req.body.comment;
+	var writer = req.body.writer;
+	var comment = req.body.comment;
+	var pw = "";
+	var userid = "";
+	if(req.session.user) userid = req.session.user.id;
+	else pw = req.body.pw;
 	var orifile = ""; //file을 업로드 안했으면 빈문자열로
 	var savefile = "";
 	if(req.file) {
@@ -304,8 +307,8 @@ app.post("/gbook_save", mt.upload.single("upfile"), (req, res) => { // 파일이
 		savefile = req.file.filename;
 	}
 	var result;
-	var sql = "INSERT INTO gbook SET comment=?, wtime=?, writer=?, pw=?, orifile=?, savefile=?";
-	var vals = [comment, util.dspDate(new Date()), writer, pw, orifile, savefile];
+	var sql = "INSERT INTO gbook SET comment=?, wtime=?, writer=?, pw=?, orifile=?, savefile=?, userid=?";
+	var vals = [comment, util.dspDate(new Date()), writer, pw, orifile, savefile, userid];
 	(async () => {
 	 result =	await sqlExec(sql, vals);
 	 if(result[0].affectedRows > 0) {
@@ -329,6 +332,7 @@ app.get(["/mem/:type", "/mem/:type/:id"], memEdit); // 회원가입, id/pw찾기
 app.post("/api-mem/:type", memApi); // 회원가입시 각종 Ajax
 app.post("/mem/join", memJoin); // 회원가입 저장
 app.post("/mem/login", memLogin); // 회원 로그인 모듈
+app.post("/mem/update", memUpdate); // 회원 로그인 모듈
 
 /* 함수구현 - GET */
 function memEdit(req, res) {
@@ -350,6 +354,34 @@ function memEdit(req, res) {
 		case "logout":
 			req.session.destroy();
 			res.redirect("/");
+			break;
+		case "edit":
+			(async () => {
+				sql = "SELECT * FROM member WHERE userid='"+req.session.user.id+"'";
+				result = await sqlExec(sql, vals);
+				vals.title = "회원정보수정";
+				vals.tel = util.telNum;
+				vals.myData = result[0][0];
+				res.render("mem_up", vals)
+			})();
+			break;
+		case "remove":
+			if(util.adminChk(req.session.user)) {
+				var id = req.query.id;
+				(async () => {
+					sql = "DELETE FROM member WHERE id="+id;
+					result = await sqlExec(sql);
+					if(result[0].affectedRows == 1) res.send(util.alertLocation({
+						msg: "삭제되었습니다.",
+						loc: "/mem/list"
+					}))
+					else res.send(util.alertLocation({
+						msg: "삭제실패",
+						loc: "/mem/list"
+					}))
+				})();
+			}
+			else res.send(alertAdmin());
 			break;
 		case "list":
 			var page = req.params.id;
@@ -408,7 +440,7 @@ function memJoin(req, res) {
 	vals.push(req.body.username);
 	vals.push(req.body.tel1 + "-" + req.body.tel2 + "-" + req.body.tel3);
 	vals.push(req.body.post);
-	vals.push(req.body.addr1 + req.body.addr2);
+	vals.push(req.body.addr1 + " " + req.body.addr2);
 	vals.push(req.body.addr3);
 	vals.push(new Date());
 	vals.push(2);
@@ -424,6 +456,29 @@ function memJoin(req, res) {
 	})();
 }
 
+/* 회원정보수정 */
+function memUpdate(req, res) {
+	const vals = [];
+	var userpw= crypto.createHash("sha512").update(req.body.userpw + salt).digest("base64");
+	// 바뀔 내용들
+	vals.push(userpw);
+	vals.push(req.body.username);
+	vals.push(req.body.tel1 + "-" + req.body.tel2 + "-" + req.body.tel3);
+	vals.push(req.body.post);
+	vals.push(req.body.addr1 + " " +req.body.addr2);
+	vals.push(req.body.addr3);
+	vals.push(req.session.user.id);
+	var sql = "";
+	var result = {};
+	(async () => {
+		sql = "UPDATE member SET userpw=?, username=?, tel=?, post=?, add1=?, add2=? WHERE userid=?";
+		result = await sqlExec(sql, vals);
+		if(result[0].affectedRows == 1) res.send(util.alertLocation({
+			msg: "정보가 수정되었습니다.",
+			loc: "/"
+		}))
+	})();
+}
 /* 로그인 처리 모듈 */
 function memLogin(req, res) {
 	var userid = req.body.loginid;

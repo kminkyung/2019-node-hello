@@ -1,0 +1,81 @@
+doctype html
+html(lang="ko")
+	head
+		include ./inc/header.pug
+	body
+		include ./inc/navi.pug
+		.container.my-3
+			.jumbotron
+				h2= `${title}`
+			form(name="memberForm", method="post", action="/mem/update", onsubmit="return memberJoin(this);")
+				table.table.table-bordered
+					colgroup
+						col(width="20%")
+						col
+					tbody
+						tr
+							td.bg-dark.text-light 아이디
+							td.form-inline
+								input.form-control.mr-3(type="text", name="userid", id="userid", placeholder="아이디", style="max-width: 200px;", value=`${myData.userid}` data-use="T" readonly disabled)
+								span.userid-cmt
+						tr
+							td.bg-dark.text-light 패스워드
+							td.form-inline
+								input.form-control(type="password", name="userpw", id="userpw", style="max-width: 200px;")
+								span.userpw-cmt
+						tr
+							td.bg-dark.text-light 패스워드 확인
+							td.form-inline
+								input.form-control(type="password", name="userpw2", id="userpw2", style="max-width: 200px;")
+								span.userpw-cmt2
+						tr
+							td.bg-dark.text-light 이름
+							td
+								input.form-control(type="text", name="username", id="username", placeholder="이름", style="max-width: 200px;" value=`${myData.username}`)
+						tr
+							td.bg-dark.text-light 전화번호
+							td.form-inline
+								select.form-control(name="tel1", id="tel1", style="max-width: 150px;")
+									- var myTel = myData.tel.split("-")
+									each item in tel
+										if item == myTel[0]
+											option(value=item seleted)= item
+										else
+											option(value=item)= item
+								span &nbsp;-&nbsp;
+								input.form-control(type="number", name="tel2", id="tel2", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myData.tel2}`)
+								span &nbsp;-&nbsp;
+								input.form-control(type="number", name="tel3", id="tel3", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myData.tel3}`)
+						tr
+							td.bg-dark.text-light 우편번호
+							td.form-inline
+								input.form-control(type="text", name="post", id="post", style="max-width: 200px;"  value=`${myData.post}` readonly)
+								span &nbsp;
+								button.btn.btn-primary(type="button", onclick="daumPostcode();") 우편번호찾기
+						tr
+							td.bg-dark.text-light 도로명 주소
+							td
+								-var addrIndex = myData.add1.indexOf(" (")
+								-var add1 = ""
+								-var add2 = ""
+								-if(addrIndex > -1) {
+								-	add1 = myData.add1.substr(0, addrIndex)
+								-	add2 = myData.add1.substr(addrIndex)
+								-} else {
+								-	add1 = myData.add1
+								-}
+								input.form-control(type="text", name="addr1", id="addr1" value=`${myData.add1}` readonly)
+								span(id="guide" style="color:#999; display:none;")
+						tr
+							td.bg-dark.text-light 상세주소
+							td.form-inline
+								input.form-control.w-50.mr-3(type="text", name="addr3", id="addr3", placeholder="상세주소" value=`${add2}`)
+								input.form-control.w-50(type="text", name="addr2", id="addr2", placeholder="참고항목", style="max-width: 200px;" value=`${myData.add2}`)
+				.my-3.text-center
+					button.btn.btn-success 회원정보수정
+					button.btn.btn-danger(type="button" onclick="location.href='/';") 취소
+		script(src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js")
+		script(src="/js/post_search.js") 
+		//- 구동되는 함수가 있는 js
+		include inc/footer.pug
+		include inc/script.pug

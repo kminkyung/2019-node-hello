@@ -13,11 +13,12 @@ html(lang="ko")
 						.text-dark.font-weight-bold 작성자
 					li.col-md-10
 						input.form-control(type="text" name="writer" placeholder="작성자")
-				ul.row.py-1
-					li.col-md-2
-						.text-dark.font-weight-bold 비밀번호
-					li.col-md-10
-						input.form-control(type="password" name="pw")
+				if !loginUser
+					ul.row.py-1
+						li.col-md-2
+							.text-dark.font-weight-bold 비밀번호
+						li.col-md-10
+							input.form-control(type="password" name="pw")
 				ul.row.py-1
 					li.col-md-2
 						.text-dark.font-weight-bold 남기실 말

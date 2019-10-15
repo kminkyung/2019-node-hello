@@ -29,7 +29,7 @@ function daumPostcode() {
 					
 					// 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
 					if(roadAddr !== ''){
-							document.getElementById("addr3").value = extraRoadAddr;
+							document.getElementById("addr2").value = extraRoadAddr;
 					} else {
 							document.getElementById("addr2").value = '';
 					}

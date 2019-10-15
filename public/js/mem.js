@@ -69,7 +69,6 @@ function memberJoin(f) {
 	return true;
 }
 
-
 function memberLogin(f) {
 	if($("#loginid").val().trim() === "") {
 		alert("아이디를 입력해주세요.");
@@ -83,3 +82,4 @@ function memberLogin(f) {
 	}
 	return true;
 }
+
