@@ -261,8 +261,8 @@ app.post("/api/:type", mt.upload.single("upfile"), (req, res) => {
 						obj.msg = "수정되었습니다.";
 					}
 					else {
-						if(req.session.user) obj.ms = "수정안됨."
-						obj.msg = "비밀번호가 올바르지 않습니다.";
+						if(req.session.user) obj.msg = "수정안됨."
+						else obj.msg = "비밀번호가 올바르지 않습니다.";
 				}
 					obj.loc = "/gbook/li/"+page;
 					res.send(util.alertLocation(obj));
