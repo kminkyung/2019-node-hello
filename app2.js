@@ -182,37 +182,59 @@ app.post("/api/:type", mt.upload.single("upfile"), (req, res) => {
 	}
 	switch(type) {
 		case "remove":
-			if(id === undefined || pw === undefined) res.redirect("/500.html");
-			else {
-				vals.push(id);
-				vals.push(pw);
+			if((id != undefined && pw != undefined) || (req.session.user && id != undefined)) {
 				(async () => {
 					// 첨부파일 가져오기
 					sql = "SELECT savefile FROM gbook WHERE id="+id;
 					result = await sqlExec(sql);
 					savefile = result[0][0].savefile;
+
 					// 실제 데이터베이스 삭제
-					sql = "DELETE FROM gbook WHERE id=? AND pw=?";
+					vals.push(id);
+					if(req.session.user) {
+						if(req.session.user.grade == 9) {
+							sql = "DELETE FROM gbook WHERE id=?";
+						}
+						else {
+							vals.push(req.session.user.id);
+							sql = "DELETE FROM gbook WHERE id=? AND userid=?"; // id -> 글번호 userid -> 정말 자기글을 지우는지
+						}
+					}
+					else {
+						vals.push(pw);
+						sql = "DELETE FROM gbook WHERE id=? AND pw=?";
+					}
 					result = await sqlExec(sql, vals);
 					if(result[0].affectedRows == 1)	{
-						obj.msg = "삭제되었습니다.";
+						// 파일삭제
 						if(util.nullchk(savefile)) fs.unlinkSync(path.join(__dirname, "/public/uploads/"+mt.getDir(savefile)+"/"+savefile));
+						// 삭제결과 리턴
+						if(req.session.user) res.json({code: 200});
+						else {
+							obj.msg = "삭제되었습니다.";
+							obj.loc = "/gbook/li/"+page;
+							res.send(util.alertLocation(obj));
+						}
 					}
-					else obj.msg = "비밀번호가 올바르지 않습니다.";
-					obj.loc = "/gbook/li/"+page;
-					res.send(util.alertLocation(obj));
-				})();
-			}
+					else {
+						if(!req.session.user) res.json({code: 500});
+						else {
+							obj.msg = "본인의 글이 아닙니다.";
+							obj.loc = "/gbook/li/"+page;
+							res.send(util.alertLocation(obj));
+					}
+				}
+			})();
+		}
+		else res.redirect("/500.html");
 			break;
 		case "update":
-			if(id === undefined || pw === undefined) res.redirect("/500.html");
-			else {
+			if((id != undefined && pw != undefined) || (req.session.user && id != undefined)) {
 				vals.push(writer);
 				vals.push(comment);
 				if(req.file) vals.push(orifile);
 				if(req.file) vals.push(savefile);
 				vals.push(id);
-				vals.push(pw);
 				(async () => {
 					// 첨부파일 가져오기
 					sql = "SELECT savefile FROM gbook WHERE id="+id;
@@ -220,19 +242,33 @@ app.post("/api/:type", mt.upload.single("upfile"), (req, res) => {
 					oldfile = result[0][0].savefile;
 					// 실제 데이터 수정
 					sql = "UPDATE gbook SET writer=?, comment=? ";
-					if(req.file) sql += ", orifile=?, savefile=?";
-					sql += "WHERE id=? AND pw=?";
+					if(req.file) sql += ", orifile=?, savefile=?"; // "UPDATE gbook SET writer=1, comment=2, orifile=3, savefile=4"
+					if(req.session.user) {
+						if(req.session.user.grade == 9)	sql += " WHERE id=?";
+						else {
+							vals.push(req.session.user.id);
+							sql += " WHERE id=? AND userid=?";
+						}
+					}
+					else {
+						vals.push(pw);
+						sql += " WHERE id=? AND pw=?";
+					}
 					result = await sqlExec(sql, vals);
 					if(result[0].affectedRows == 1)	{
-						obj.msg = "수정되었습니다.";
 						// 기존파일 삭제하기
 						if(req.file && util.nullchk(oldfile)) fs.unlinkSync(path.join(__dirname, "/public/uploads/"+mt.getDir(oldfile)+"/"+oldfile));
+						obj.msg = "수정되었습니다.";
 					}
-					else obj.msg = "비밀번호가 올바르지 않습니다.";
+					else {
+						if(req.session.user) obj.ms = "수정안됨."
+						obj.msg = "비밀번호가 올바르지 않습니다.";
+				}
 					obj.loc = "/gbook/li/"+page;
 					res.send(util.alertLocation(obj));
 				})();
 			}
+			else res.redirect("/500.html");
 			break;
 		default:
 			res.redirect("/404.html");

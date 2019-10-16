@@ -43,9 +43,9 @@ html(lang="ko")
 										else
 											option(value=item)= item
 								span &nbsp;-&nbsp;
-								input.form-control(type="number", name="tel2", id="tel2", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myData.tel2}`)
+								input.form-control(type="number", name="tel2", id="tel2", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myTel[1]}`)
 								span &nbsp;-&nbsp;
-								input.form-control(type="number", name="tel3", id="tel3", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myData.tel3}`)
+								input.form-control(type="number", name="tel3", id="tel3", min="0", max="9999", maxlength="4", style="max-width: 200px;", oninput="telChk(this);" value=`${myTel[2]}`)
 						tr
 							td.bg-dark.text-light 우편번호
 							td.form-inline
