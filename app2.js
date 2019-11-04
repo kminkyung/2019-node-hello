@@ -84,7 +84,7 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 	var result;
 	switch(type) {
 		case "in":
-			vals.title = "방명록 작성";
+			vals.title = "글작성하기";
 			pug = "gbook_in";
 			res.render(pug, vals);
 			break;
@@ -108,11 +108,11 @@ app.get(["/gbook", "/gbook/:type", "/gbook/:type/:id"], (req, res) => { //gbook/
 				vals.datas = result[0];
 				for(let item of vals.datas) item.useIcon = util.iconChk(item.wtime, item.savefile); //배열datas를 돌면서 item.useIcon을 추가함
 				// console.log(vals.datas);
-				vals.title = "방명록";
+				vals.title = "자료실";
 				vals.pager = pagerVal;
 				pug = "gbook";
 				for(let item of vals.datas) {
-					item.wtime = util.dspDate(new Date(item.wtime));
+					item.wtime = util.dspDate(new Date(item.wtime), 4);
 				}
 				res.render(pug, vals); //vals에 title, pager{totCnt, grpCnt, page} 를 넣음
 			})();

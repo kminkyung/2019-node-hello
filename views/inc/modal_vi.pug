@@ -2,27 +2,27 @@
 	.modal-dialog.modal-dialog-centered(role="document")
 		.modal-content
 			.modal-body
-				table.table.table-hover
-					thead.thead-dark
+				table.table
+					thead
 						tbody
 							tr
-								td.bg-dark.text-light.text-center 작성자
+								td.text-light.text-center 작성자
 								td 
 							tr
-								td.bg-dark.text-light.text-center 작성일
+								td.text-light.text-center 작성일
 								td 
 							tr
-								td.bg-dark.text-light.text-center 내용
+								td.text-light.text-center 내용
 								td 
-									div(style="min-height: 200px;")
+									div(style="min-height: 100px;")
 							tr.img-tr.d-none
-								td.bg-dark.text-light.text-center 첨부이미지
+								td.text-light.text-center 첨부이미지
 								td
 									img.w-100(style="max-width:350px;")
 							tr.file-tr.d-none
-								td.bg-dark.text-light.text-center 첨부파일
+								td.text-light.text-center 첨부파일
 								td
 									a
 									//- a(href="#" download)
 			.modal-footer.justify-content-center
-				button#bt-close.btn.btn-primary(data-dismiss="modal") 닫기
+				button#bt-close.btn.btn-primary.bt(data-dismiss="modal") 닫기

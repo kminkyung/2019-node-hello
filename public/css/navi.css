@@ -1,3 +1,9 @@
+.navi {
+	font-weight: 500;
+	font-size: 1.125rem;
+}
+
+
 .mem-edit {
 	position: absolute;
 	display: none;

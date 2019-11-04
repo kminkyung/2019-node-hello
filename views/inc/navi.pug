@@ -1,16 +1,16 @@
 link(rel="stylesheet", href="/css/navi.css")
-.navi.d-flex.justify-content-between.align-items-center.p-3.bg-dark.text-white#header
+.navi.d-flex.justify-content-between.align-items-center.p-5.text-white#header
 	.logo.font-weight-bold.text-decoration-none
-		a(href="/") HELLO Company
+		a(href="/") LOGO
 	ul.d-flex.align-items-center
-		li.mr-3
-			a(href="/gbook") 방명록(BackEnd)
-		li.mr-3
-			a(href="/gbook_ajax") 방명록(Ajax)
-		li.mr-3
-			a(href="/gbook/in") 방명록 작성
+		li.mr-4
+			a(href="/gbook_ajax") Ajax
+		li.mr-4
+			a(href="/gbook") 목록
+		li.mr-4
+			a(href="/gbook/in") 글쓰기
 		-if(loginUser) {
-			li.mr-3.position-relative
+			li.mr-4.position-relative
 				a(href="#")
 					i.fas.fa-user-circle.mr-3
 					span= loginUser.name
@@ -20,14 +20,14 @@ link(rel="stylesheet", href="/css/navi.css")
 					li
 						a(href="/mem/logout") 로그아웃
 		-} else {
-			li.mr-3
+			li.mr-4
 				a(href="/mem/join") 회원가입
-			li.mr-3
+			li.mr-4
 				a(href="/mem/login") 로그인
 		-}
 		-if(loginUser) {
 			-if(loginUser.grade == 9) {
-				li.mr-3
+				li.mr-4
 					a(href="/mem/list") 회원리스트
 			-}
 		-}

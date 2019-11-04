@@ -5,22 +5,24 @@ html(lang="ko")
 	body
 		include ./inc/navi.pug
 		.container.my-3
-			.jumbotron
+			.jumbotron.d-flex.align-items-baseline
 				.h2= `${title}`
-			table#gbook-tb.table.table-bordered.table-hover.my-3.text-center
+				span.sub-title Archives
+			table#gbook-tb.table.my-3.text-left
 				colgroup
 					col(width="8%")
 					col(width="10%")
-					col(width="15%")
-					col(width="40%")
-					col(width="10%")
-				thead.thead-dark
+					col(width="18%")
+					col(width="34%")
+					col(width="20%")
+				thead
 					tr
 						th 번호
 						th 작성자
 						th 작성일
-						th 한마디
-						th 비고
+						th 제목
+						th 파일
+						th 관리
 				tbody
 					each item in datas
 						tr
@@ -53,15 +55,20 @@ html(lang="ko")
 								if item.useIcon.zip
 									img.ml-2(src="/img/icon/zip.png")
 							td
+							td
 								-if(loginUser) {
 								-	if(loginUser.id == item.userid || loginUser.grade == 9) {
-										button.btn.btn-info.btn-sm.mr-1.btChg 수정
-										button.btn.btn-danger.btn-sm.btRev2(data-page=`${pager.page}`) 삭제
+										button.btn.btn-info.btn-sm.mr-1.btChg
+											i.far.fa-edit
+										button.btn.btn-danger.btn-sm.btRev2(data-page=`${pager.page}`)
+											i.fas.fa-times
 								-		}
 								-} else {
 								-	if(item.userid == "") {
-										button.btn.btn-info.btn-sm.mr-1.btChg 수정
-										button.btn.btn-danger.btn-sm.btRev 삭제
+										button.btn.btn-sm.mr-1.btChg
+											i.far.fa-edit
+										button.btn.btn-sm.btRev
+											i.fas.fa-times
 								-		}
 								-	}
 

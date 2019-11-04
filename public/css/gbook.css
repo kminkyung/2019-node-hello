@@ -1,5 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:100,300,400,500,700,900&display=swap');
+/* font-family: 'Noto Sans KR', sans-serif; */
+
 html, body {
 	height: 100%;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+	background-color: #1f1f1f;
+}
+.jumbotron {
+	background-color: #1f1f1f;
+	color: #ffffff;
+	padding: 0;
+}
+.h2 {
+	font-size: 6rem;
+	font-weight: 300;
+}
+.sub-title {
+	margin-left: 1.5rem;
+	font-size: 3rem;
+}
+
+.table {
+	color: #ffffff;
+	font-weight: 400;
+}
+
+
+thead th {
+	border-top: none !important;
+	border-bottom: none !important;
+	font-weight: 400;
+}
+
+
+.container tbody > tr:hover {
+	background-color: #ffffff;
+	color: #1f1f1f;
+}
+tbody td:first-child {
+	padding-left: 25px;
 }
 
 .icon {
@@ -20,4 +62,100 @@ html, body {
 }
 .icon.icon-img {
 	background-color: darkkhaki;
+}
+
+
+.btChg, .btRev, .btRev2 {
+	border: 1px solid #ffffff;
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: 31px;
+	width: 31px;
+	height: 31px;
+}
+
+
+
+.pager span {
+	border: none;	
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+}
+.pager span:hover {
+	border: none;	
+	color: #7e7e7e;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+/* Modal */
+.modal-content {
+	background-color: #1f1f1f;
+	padding: 0;
+}
+.modal-body {
+	padding: 2rem 3rem 1rem 3rem;
+}
+
+
+.modal-body tbody td {
+	border-top: none !important;
+	border-bottom: 1px solid #ffffff;
+	padding: 1rem 0;
+}
+
+.modal-footer {
+	border-top: none;
+	padding-bottom: 2rem;
+}
+
+.bt {
+	border: 1px solid #ffffff;
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+}
+.bt:hover {
+	background-color: #ffffff;
+	color: #1f1f1f;
+}
+
+
+#update-modal input, #update-modal textarea {
+	background-color: #1f1f1f;
+	color: #ffffff;
+	border: none;
+}
+#update-modal input:focus, #update-modal textarea:focus {
+	box-shadow: none;
+	background-color: rgb(66, 66, 66);
+}
+
+
+#remove-modal h5 {
+	color: #ffffff;
+}
+#remove-modal .modal-header {
+	border-bottom: none;
+}
+#remove-modal .modal-header span {
+	color: #ffffff;
+}
+#remove-modal .modal-body {
+	color: #ffffff;
+}
+#remove-modal input, #remove-modal textarea {
+	background-color: #1f1f1f;
+	color: #ffffff;
+	border: none;
+}
+
+#remove-modal input:focus, #remove-modal textarea:focus {
+	box-shadow: none;
+	background-color: rgb(66, 66, 66);
+}
+
+#remove-modal .modal-body .row {
+	border-bottom: 1px solid #ffffff;
+	padding: 0;
+	margin-bottom: 3rem;
+	font-weight: 400;
 }

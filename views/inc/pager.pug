@@ -1,48 +1,48 @@
-ul.pager.my-4.pagination.justify-content-center(data-pager-name=`${pager.link}`)
+ul.pager.d-flex.my-4.justify-content-center(data-pager-name=`${pager.link}`)
 
 	if pager.prevShow
-		li.page-item.page-first(data-page=`${pager.prev}`, style="cursor: pointer;")
+		li.page-first(data-page=`${pager.prev}`, style="cursor: pointer;")
 			span.page-link
 				i.fas.fa-angle-double-left
 	else
-		li.page-item.page-first.disabled
+		li.page-first.disabled
 			span.page-link
 				i.fas.fa-angle-double-left
 
 	if pager.page > 1
-		li.page-item.page-prev(data-page=`${Number(pager.page) - 1}`, style="cursor: pointer;")
+		li.page-prev(data-page=`${Number(pager.page) - 1}`, style="cursor: pointer;")
 			span.page-link
 				i.fas.fa-angle-left
 	else
-		li.page-item.page-prev.disabled
+		li.page-prev.disabled
 			span.page-link
 				i.fas.fa-angle-left
 			
 	- for(var i=pager.stn; i<=pager.edn; i++) {
 		if pager.page == i
-			li.page-item.page-ct.active
+			li.page-ct.active
 				span.page-link= i
 		else
-			li.page-item.page-ct(data-page=`${i}`, style="cursor: pointer;")
+			li.page-ct(data-page=`${i}`, style="cursor: pointer;")
 				span.page-link= i
 	- }
 
 	if pager.page < pager.cnt
-		li.page-item.page-next(data-page=`${Number(pager.page) + 1}`, style="cursor: pointer;")
+		li.page-next(data-page=`${Number(pager.page) + 1}`, style="cursor: pointer;")
 			span.page-link
 				i.fas.fa-angle-right
 	else
-		li.page-item.page-next.disabled
+		li.page-next.disabled
 			span.page-link
 				i.fas.fa-angle-right
 			
 
 	if pager.lastShow
-		li.page-item.page-last(data-page=`${pager.next}`, style="cursor: pointer;")
+		li.page-last(data-page=`${pager.next}`, style="cursor: pointer;")
 			span.page-link
 				i.fas.fa-angle-double-right 
 	else
-		li.page-item.page-last.disabled
+		li.page-last.disabled
 			span.page-link
 				i.fas.fa-angle-double-right 
 
