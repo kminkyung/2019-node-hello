@@ -1,8 +1,10 @@
 $("tr").mouseover(function(){
 	$(this).find(".btn").css({"color":"#1f1f1f", "background-color":"#ffffff", "border-color": "#1f1f1f"})
+	$(this).find("a").css({"color":"#1f1f1f"});
 })
 $("tr").mouseleave(function(){
 	$(this).find(".btn").css({"color":"#ffffff", "background-color":"rgba(0, 0, 0, 0)", "border-color": "#ffffff"})
+	$(this).find("a").css({"color":"#ffffff"});
 })
 
 

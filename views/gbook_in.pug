@@ -4,34 +4,36 @@ html(lang="ko")
 		include ./inc/header.pug
 	body
 		include ./inc/navi.pug
-		.container.my-3
+		.container.gbook-in.my-3
 			.jumbotron
-				h2= `${title}`
+				h2.in-title= `${title}`
 			form(action="/gbook_save" method="post" name="gForm" onsubmit="return onSend(this);" enctype="multipart/form-data")
-				ul.row.py-1
+				ul.row
 					li.col-md-2
-						.text-dark.font-weight-bold 작성자
-					li.col-md-10
-						input.form-control(type="text" name="writer" placeholder="작성자")
+						div.py-2 작성자
+					li.col-md-10.my-3
+						input.form-control.in-input(type="text" name="writer" placeholder="작성자")
 				if !loginUser
-					ul.row.py-1
+					ul.row
 						li.col-md-2
-							.text-dark.font-weight-bold 비밀번호
-						li.col-md-10
-							input.form-control(type="password" name="pw")
-				ul.row.py-1
+							div.py-2 비밀번호
+						li.col-md-10.my-3
+							input.form-control.in-input(type="password" name="pw")
+				ul.row
 					li.col-md-2
-						.text-dark.font-weight-bold 남기실 말
-					li.col-md-10
-						textarea.form-control(name="comment" placeholder="남기실 말")
-				ul.row.py-1
+						div.py-2 남기실 말
+					li.col-md-10.my-3
+						textarea.form-control.in-input(name="comment" placeholder="남기실 말")
+				ul.row
 					li.col-md-2
-						.text-dark.font-weight-bold 첨부파일
-					li.col-md-10
+						div.py-2 첨부파일
+					li.col-md-10.my-3
 						input.form-control-file(name="upfile" type="file")
-				div.border-top.my-3.p-3.text-center
-					button.btn.btn-primary(type="submit") 저장
-					button.btn.btn-danger(type="reset") 다시작성
+						//- label.custom-file-label(for="customFile") Choose file
+				div.p-3.text-center.mt-5
+					button.btn.bt(type="submit") 
+						i.fas.fa-check &nbsp;저장
+					button.btn.bt(type="reset") 다시작성
 
 		include ./inc/footer.pug
 		include ./inc/script.pug

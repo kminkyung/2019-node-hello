@@ -3,14 +3,14 @@ link(rel="stylesheet", href="/css/popup.css")
 	.popup-wrap
 		.popup-header
 			.popup-tit
-				i.fas.fa-info-circle
+				i.fas.fa-info
 				span 사이트 안내
-			.popup-close
+			button.popup-close
 				i.fas.fa-times
 		.popup-body
-			p 본 사이트는 Node.js, MySQL, PUG, EJS, jQuery, AJAX를 사용하여 제작된 방명록 사이트입니다.
+			p 본 사이트는 Node.js, MySQL, PUG, EJS, jQuery, AJAX를 사용하여 제작된 자료실 사이트입니다.
 		.popup-footer
-			.popup-24
-				input(type="checkbox", name="popOut" id="popOut")
-				label(for="popOut") 24시간 동안 보지않기
-			button.popup-close2.btn.btn-sm.btn-danger 닫기
+			.popup-24.custom-control.custom-checkbox
+				input.custom-control-input(type="checkbox", name="popOut" id="popOut")
+				label.custom-control-label(for="popOut") 24시간 동안 보지않기
+			button.popup-close2.btn.btn-sm.bt 닫기

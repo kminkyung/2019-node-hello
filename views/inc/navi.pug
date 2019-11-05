@@ -3,8 +3,8 @@ link(rel="stylesheet", href="/css/navi.css")
 	.logo.font-weight-bold.text-decoration-none
 		a(href="/") LOGO
 	ul.d-flex.align-items-center
-		li.mr-4
-			a(href="/gbook_ajax") Ajax
+		//- li.mr-4
+		//- 	a(href="/gbook_ajax") Ajax
 		li.mr-4
 			a(href="/gbook") 목록
 		li.mr-4
@@ -12,7 +12,7 @@ link(rel="stylesheet", href="/css/navi.css")
 		-if(loginUser) {
 			li.mr-4.position-relative
 				a(href="#")
-					i.fas.fa-user-circle.mr-3
+					i.fas.fa-user-circle.mr-2
 					span= loginUser.name
 				ul.mem-edit
 					li

@@ -8,22 +8,22 @@ $("#userid").on("blur", function(){
 	ajax("/api-mem/userid", "post", {userid}, function(res){
 		if(res.chk) {
 			$(".userid-cmt").text('* 사용가능한 아이디 입니다.');
-			$(".userid-cmt").css({"color": "blue"});
-			$("#userid").css({"border": "1px solid blue"});
+			$(".userid-cmt").css({"color": "#ffffff"});
+			// $("#userid").css({"border": "1px solid #ffffff"});
 			$("#userid").data("use", "T");
 		}
 		else {
 			$(".userid-cmt").text('* 사용할 수 없는 아이디 입니다.');
-			$(".userid-cmt").css({"color": "red"});
-			$("#userid").css({"border": "1px solid red"});
+			$(".userid-cmt").css({"color": "#ffffff"});
+			$("#userid").css({"border": "1px solid #ffffff"});
 			$("#userid").focus();
 		}
 	});
  }
  else {
 	$(".userid-cmt").text("* 아이디는 영문, 숫자 6 ~ 16자 입니다.");
-	$(".userid-cmt").css({"color": "red"});
-	$("#userid").css({"border": "1px solid red"});
+	$(".userid-cmt").css({"color": "#ffffff"});
+	$("#userid").css({"border": "1px solid #ffffff"});
 	$("#userid").focus();
  }
 });

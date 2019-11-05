@@ -9,6 +9,13 @@ html, body {
 body {
 	background-color: #1f1f1f;
 }
+
+a {color: white;}
+a:link {color: white;}
+a:visited {color: white;}
+a:hover {color: #7e7e7e; text-decoration: none;}
+a:active {color: white;}
+
 .jumbotron {
 	background-color: #1f1f1f;
 	color: #ffffff;
@@ -16,12 +23,19 @@ body {
 }
 .h2 {
 	font-size: 6rem;
-	font-weight: 300;
+	font-weight: 400;
 }
 .sub-title {
 	margin-left: 1.5rem;
 	font-size: 3rem;
 }
+.new {
+	margin-left: 0.5rem;
+	font-weight: 600;
+	font-size: 0.75rem;
+	color: #ffffff;
+}
+
 
 .table {
 	color: #ffffff;
@@ -65,7 +79,7 @@ tbody td:first-child {
 }
 
 
-.btChg, .btRev, .btRev2 {
+.btChg, .btRev, .btRev2, .popup-close {
 	border: 1px solid #ffffff;
 	color: #ffffff;
 	background-color: rgba(0, 0, 0, 0);
@@ -119,13 +133,14 @@ tbody td:first-child {
 }
 
 
-#update-modal input, #update-modal textarea {
+#update-modal input, #update-modal textarea, .in-input {
 	background-color: #1f1f1f;
 	color: #ffffff;
 	border: none;
 }
-#update-modal input:focus, #update-modal textarea:focus {
+#update-modal input:focus, #update-modal textarea:focus, .in-input:focus {
 	box-shadow: none;
+	color: #ffffff;
 	background-color: rgb(66, 66, 66);
 }
 
@@ -158,4 +173,27 @@ tbody td:first-child {
 	padding: 0;
 	margin-bottom: 3rem;
 	font-weight: 400;
+}
+
+
+
+/* gbook_in */
+
+.in-title {
+	font-size: 4.25rem;
+	font-weight: 400;
+}
+.container {
+	color: #ffffff;
+}
+
+.gbook-in ul:not(:last-child) {
+	border-bottom: 1px solid #ffffff;
+}
+
+.gbook-in ul {
+	align-items: center;
+}
+.gbook-in ul > li > div {
+	font-size: 1.125rem;
 }

@@ -8,7 +8,7 @@ html(lang="ko")
 			.jumbotron
 				h2= `${title}`
 			form(name="loginForm", method="post", action="/mem/login", onsubmit="return memberLogin(this);")
-				table.table.table-bordered.mx-auto(style="max-width: 400px;")
+				table.table.login-table.mx-auto.mt-5(style="max-width: 400px;")
 					colgroup
 						col(width="30%")
 						col
@@ -19,16 +19,16 @@ html(lang="ko")
 								span 회원 로그인
 					tbody
 						tr
-							td.bg-dark.text-light 아이디
+							td 아이디
 							td
 								input.form-control.mr-3(type="text", name="loginid", id="loginid", placeholder="아이디", data-use="F")
-						tr
-							td.bg-dark.text-light 패스워드
+						tr.border-bottom
+							td 패스워드
 							td
 								input.form-control(type="password", name="loginpw", id="loginpw")
 								span.userpw-cmt
-				.my-3.text-center
-					button.btn.btn-primary 로그인
-					button.btn.btn-success(type="button" onclick="location.href='/mem/join';") 회원가입
+				.my-5.text-center
+					button.btn.bt 로그인
+					button.btn.bt(type="button" onclick="location.href='/mem/join';") 회원가입
 		include inc/footer.pug
 		include inc/script.pug

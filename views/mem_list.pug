@@ -4,10 +4,10 @@ html(lang="ko")
 		include ./inc/header.pug
 	body
 		include ./inc/navi.pug
-		.container.my-3
-			.jumbotron
-				.h2= `${title}`
-			table.table.text-left
+		.container.my-5
+			.jumbotron.mb-5
+				h2= `${title}`
+			table.table.text-left.memlist-table.mb-5
 				colgroup
 					col(width="5%")
 					col(width="8%")
@@ -39,7 +39,8 @@ html(lang="ko")
 								span= item.add1, item.add2
 							td
 								if item.grade < 9
-									button.btn.btn-sm.btn-danger(onclick=`if(confirm('정말로 삭제?')){location.href='/mem/remove?id=${item.id}';}`) 삭제
+									button.btn.btn-sm.bt-remove(onclick=`if(confirm('정말로 삭제하시겠습니까?')){location.href='/mem/remove?id=${item.id}';}`)
+										i.fas.fa-times
 			include ./inc/pager.pug
 		include ./inc/footer.pug
 		include ./inc/script.pug

@@ -8,13 +8,13 @@ html(lang="ko")
 			.jumbotron.d-flex.align-items-baseline
 				.h2= `${title}`
 				span.sub-title Archives
-			table#gbook-tb.table.my-3.text-left
+			table#gbook-tb.table.my-5.text-left
 				colgroup
 					col(width="8%")
 					col(width="10%")
 					col(width="18%")
-					col(width="34%")
-					col(width="20%")
+					col(width="29%")
+					col(width="25%")
 				thead
 					tr
 						th 번호
@@ -31,30 +31,31 @@ html(lang="ko")
 							td= item.wtime
 							td.text-left= item.comment
 								if item.useIcon.new
-									img.ml-2(src="/img/icon/new.png")
-								if item.useIcon.gif
-									img.ml-2(src="/img/icon/gif.png")
-								if item.useIcon.doc
-									img.ml-2(src="/img/icon/doc.png")
-								if item.useIcon.hwp
-									img.ml-2(src="/img/icon/hwp.png")
-								if item.useIcon.jpg
-									img.ml-2(src="/img/icon/jpg.png")
-								if item.useIcon.pdf
-									img.ml-2(src="/img/icon/pdf.png")
-								if item.useIcon.png
-									img.ml-2(src="/img/icon/png.png")
-								if item.useIcon.ppt
-									img.ml-2(src="/img/icon/ppt.png")
-								if item.useIcon.txt
-									img.ml-2(src="/img/icon/txt.png")
-								if item.useIcon.xls
-									img.ml-2(src="/img/icon/xls.png")
-								if item.useIcon.xlsx
-									img.ml-2(src="/img/icon/xls.png")
-								if item.useIcon.zip
-									img.ml-2(src="/img/icon/zip.png")
+									span.new N
+								//- if item.useIcon.gif
+								//- 	img.ml-2(src="/img/icon/gif.png")
+								//- if item.useIcon.doc
+								//- 	img.ml-2(src="/img/icon/doc.png")
+								//- if item.useIcon.hwp
+								//- 	img.ml-2(src="/img/icon/hwp.png")
+								//- if item.useIcon.jpg
+								//- 	img.ml-2(src="/img/icon/jpg.png")
+								//- if item.useIcon.pdf
+								//- 	img.ml-2(src="/img/icon/pdf.png")
+								//- if item.useIcon.png
+								//- 	img.ml-2(src="/img/icon/png.png")
+								//- if item.useIcon.ppt
+								//- 	img.ml-2(src="/img/icon/ppt.png")
+								//- if item.useIcon.txt
+								//- 	img.ml-2(src="/img/icon/txt.png")
+								//- if item.useIcon.xls
+								//- 	img.ml-2(src="/img/icon/xls.png")
+								//- if item.useIcon.xlsx
+								//- 	img.ml-2(src="/img/icon/xls.png")
+								//- if item.useIcon.zip
+								//- 	img.ml-2(src="/img/icon/zip.png")
 							td
+								a(href="#" download)=item.orifile
 							td
 								-if(loginUser) {
 								-	if(loginUser.id == item.userid || loginUser.grade == 9) {

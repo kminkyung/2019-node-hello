@@ -1,5 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:100,300,400,500,700,900&display=swap');
+/* font-family: 'Noto Sans KR', sans-serif; */
+
+
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+
+body {
+  background-color: #1f1f1f;
+}
+.jumbotron {
+  color: #ffffff;
+  background-color: #1f1f1f;
+  padding: 0;
+}
+
+h2 {
+  font-size: 4rem;
+}
+
+.mem-table, .memup-table, .login-table, .memlist-table  {
+  color: #ffffff;
+}
+
+.mem-table tr:first-child td {
+  border-top: none;
+}
+
+.mem-table input, .mem-table select, .login-table input, #post, #addr1, .memup-table input, .memup-table select {
+	background-color: #1f1f1f;
+	color: #ffffff;
+	border: none;
+}
+
+.mem-table input:focus, .mem-table select:focus, .login-table input:focus, #post:focus, #addr1:focus, .memup-table input:focus, .memup-table select:focus {
+  box-shadow: none;
+	color: #ffffff;
+	background-color: rgb(66, 66, 66);
+}
+#tel1, #tel2, #tel3 {
+  border: 1px solid rgb(66, 66, 66);
+} 
+
+.bt {
+	border: 1px solid #ffffff;
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+}
+.bt:hover {
+	background-color: #ffffff;
+	color: #1f1f1f;
+}
+
+/* login */
+
+
+.login-table thead th, .memlist-table thead th {
+  border: none;
+}
+.login-table tbody {
+  border: none;
+}
+
+/* update */
+.memup-table .in-disabled {
+  color: #9e9e9e;
+  background-color: #1f1f1f;
+}
+
+
+
+/* memeber list */
+.bt-remove {
+  border: 1px solid #ffffff;
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: 31px;
+	width: 31px;
+	height: 31px;
+}
+
+.bt-remove:hover {
+  color: #1f1f1f;
+  background-color: #ffffff;
+}
+
+.pager span {
+	border: none;	
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0);
+}
+.pager span:hover {
+	border: none;	
+	color: #7e7e7e;
+	background-color: rgba(0, 0, 0, 0);
+}
+
