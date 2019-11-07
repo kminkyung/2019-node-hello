@@ -1,10 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:100,300,400,500,700,900&display=swap');
-/* font-family: 'Noto Sans KR', sans-serif; */
 
-html, body {
-	height: 100%;
-	font-family: 'Noto Sans KR', sans-serif;
-}
 
 body {
 	background-color: #1f1f1f;
@@ -13,8 +7,9 @@ body {
 a {color: white;}
 a:link {color: white;}
 a:visited {color: white;}
-a:hover {color: #7e7e7e; text-decoration: none;}
+a:hover {color: #7e7e7e !important; text-decoration: none;}
 a:active {color: white;}
+
 
 .jumbotron {
 	background-color: #1f1f1f;
@@ -48,12 +43,15 @@ thead th {
 	border-bottom: none !important;
 	font-weight: 400;
 }
+thead th:last-child {
+	flex-wrap: nowrap;
+}
 
-
-.container tbody > tr:hover {
+#gbook-tb tbody tr:hover {
 	background-color: #ffffff;
 	color: #1f1f1f;
 }
+
 tbody td:first-child {
 	padding-left: 25px;
 }
@@ -89,7 +87,12 @@ tbody td:first-child {
 }
 
 
-
+.page-item {
+	background-color: transparent !important;
+}
+.page-item > span {
+	background-color: transparent !important;
+}
 .pager span {
 	border: none;	
 	color: #ffffff;
@@ -109,7 +112,6 @@ tbody td:first-child {
 .modal-body {
 	padding: 2rem 3rem 1rem 3rem;
 }
-
 
 .modal-body tbody td {
 	border-top: none !important;
@@ -196,4 +198,24 @@ tbody td:first-child {
 }
 .gbook-in ul > li > div {
 	font-size: 1.125rem;
+}
+
+
+/* @media screen and (max-width: 996px) {
+	.container {
+		margin: 0;
+		padding: 3rem;
+	}
+} */
+
+
+@media screen and (max-width: 768px) {
+	.container {
+		margin: 0;
+		padding: 0;
+		max-width: 100%;
+	}
+	.jumbotron {
+		padding: 2rem;
+	}
 }

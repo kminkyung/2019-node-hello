@@ -1,8 +1,8 @@
-$("tr").mouseover(function(){
+$("#gbook-tb tr").mouseover(function(){
 	$(this).find(".btn").css({"color":"#1f1f1f", "background-color":"#ffffff", "border-color": "#1f1f1f"})
 	$(this).find("a").css({"color":"#1f1f1f"});
 })
-$("tr").mouseleave(function(){
+$("#gbook-tb tr").mouseleave(function(){
 	$(this).find(".btn").css({"color":"#ffffff", "background-color":"rgba(0, 0, 0, 0)", "border-color": "#ffffff"})
 	$(this).find("a").css({"color":"#ffffff"});
 })
@@ -38,8 +38,6 @@ function onSend(f) {
 	// }
 	return true;
 }
-
-
 
 
 // 상세내용보기 - modal POPUP
@@ -90,6 +88,7 @@ function writeAjax(res, modal) {
 				$(modal).find(".img-tr").removeClass("d-none"); 
 				$(modal).find(".img-tr").find("td").eq(0).attr("rowspan", "2");
 				$(modal).find(".img-tr").find("img").attr("src", path); 
+				$(modal).find(".img-tr").find("a").attr("href", downPath);
 			}
 		}
 		else {
@@ -205,8 +204,9 @@ $(".popup-close, .popup-close2").click(function(){
 	$(".popup-wrap").css({"opacity": 0, "transform": "translateY(-100%)"});
 });
 
-
-
+// $(".down-file").click(function(){
+// 	event.stopPropagation();
+// });
 // $(f).find("input[name='writer']").val().trim() //jQuery 접근
 // f.writer.value.trim() //jQuery 접근
 

@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:100,300,400,500,700,900&display=swap');
-/* font-family: 'Noto Sans KR', sans-serif; */
-
 .logo {
 	font-size: 2.25rem;
 }
 .navi {
-	font-weight: 500;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: 600;
 	font-size: 1.25rem;
 }
 

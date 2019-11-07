@@ -1,28 +1,28 @@
-#gbook-modal.modal.fade(tabindex="-1", role="dialog", aria-hidden="true")
+#gbook-modal.modal(tabindex="-1", role="dialog", aria-hidden="true")
 	.modal-dialog.modal-dialog-centered(role="document")
 		.modal-content
 			.modal-body
 				table.table
-					thead
-						tbody
-							tr
-								td.text-light.text-center 작성자
-								td 
-							tr
-								td.text-light.text-center 작성일
-								td 
-							tr
-								td.text-light.text-center 내용
-								td 
-									div(style="min-height: 200px;")
-							tr.img-tr.d-none
-								td.text-light.text-center 첨부이미지
-								td
+					tbody
+						tr
+							td.text-center 작성자
+							td 
+						tr
+							td.text-center 작성일
+							td 
+						tr
+							td.text-center 내용
+							td 
+								div(style="min-height: 200px;")
+						tr.img-tr.d-none
+							td.text-center 첨부이미지
+							td
+								a
 									img.w-100(style="max-width:350px;")
-							tr.file-tr.d-none
-								td.text-light.text-center 첨부파일
-								td
-									a
-									//- a(href="#" download)
+						tr.file-tr.d-none
+							td.text-center 첨부파일
+							td
+								a
+								//- a(href="#" download)
 			.modal-footer.justify-content-center
 				button#bt-close.btn.btn-primary.bt(data-dismiss="modal") 닫기

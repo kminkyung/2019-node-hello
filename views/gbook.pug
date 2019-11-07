@@ -4,7 +4,7 @@ html(lang="ko")
 		include ./inc/header.pug
 	body
 		include ./inc/navi.pug
-		.container.my-3
+		.container
 			.jumbotron.d-flex.align-items-baseline
 				.h2= `${title}`
 				span.sub-title Archives
@@ -55,7 +55,7 @@ html(lang="ko")
 								//- if item.useIcon.zip
 								//- 	img.ml-2(src="/img/icon/zip.png")
 							td
-								a(href="#" download)=item.orifile
+								a.down-file(href=`/download?fileName=${item.savefile}&downName=${item.orifile}`)=item.orifile
 							td
 								-if(loginUser) {
 								-	if(loginUser.id == item.userid || loginUser.grade == 9) {
