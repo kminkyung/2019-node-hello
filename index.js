@@ -1,7 +1,7 @@
 // 앱실행
 const express = require("express"); //node_modules의 express import
 const app = express(); // excute express
-const port = 3000;
+const port = 8080;
 app.listen(port, () => {
 	console.log("http://127.0.0.1:"+port);
 });
